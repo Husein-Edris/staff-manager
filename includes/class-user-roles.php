@@ -23,9 +23,9 @@ class RT_User_Roles_V2 {
         if (defined('DOING_AJAX') && DOING_AJAX) {
             return;
         }
-        
+
         $user = wp_get_current_user();
-        if (!in_array('kunden_v2', $user->roles) || in_array('administrator', $user->roles)) {
+        if ((!in_array('kunden', $user->roles) && !in_array('kunden_v2', $user->roles)) || in_array('administrator', $user->roles)) {
             return;
         }
         
@@ -53,12 +53,15 @@ class RT_User_Roles_V2 {
         // Check if trying to access employee posts
         if (in_array($current_page, array('edit.php', 'post-new.php', 'post.php'))) {
             $post_type = isset($_GET['post_type']) ? $_GET['post_type'] : 'post';
-            
-            // For post.php, check the actual post type
-            if ($current_page === 'post.php' && isset($_GET['post'])) {
-                $post = get_post($_GET['post']);
-                if ($post) {
-                    $post_type = $post->post_type;
+
+            // For post.php, check the actual post type (support both GET and POST)
+            if ($current_page === 'post.php') {
+                $check_post_id = isset($_GET['post']) ? intval($_GET['post']) : (isset($_POST['post_ID']) ? intval($_POST['post_ID']) : 0);
+                if ($check_post_id) {
+                    $post = get_post($check_post_id);
+                    if ($post) {
+                        $post_type = $post->post_type;
+                    }
                 }
             }
             
@@ -69,11 +72,9 @@ class RT_User_Roles_V2 {
             }
             
             // For post.php, ensure they own the employee
-            if ($current_page === 'post.php' && isset($_GET['post'])) {
-                $post_id = intval($_GET['post']);
-                $employer_id = get_post_meta($post_id, 'employer_id', true);
-                
-                if ($employer_id != $user->ID) {
+            if ($current_page === 'post.php' && $check_post_id) {
+                $employer_id = get_post_meta($check_post_id, 'employer_id', true);
+                if ($employer_id && $employer_id != $user->ID) {
                     wp_redirect(admin_url('edit.php?post_type=angestellte_v2'));
                     exit;
                 }

@@ -331,7 +331,7 @@ class RT_Kuendigung_Handler_V2 {
                     ?>
         <div class="kuendigung-item" data-kuendigung-id="<?php echo esc_attr($kuendigung->ID); ?>">
             <h4>
-                <?php echo esc_html($kuendigung->post_title); ?>
+                    <?php echo esc_html($kuendigung->post_title); ?>
             </h4>
 
             <div class="kuendigung-status">
@@ -569,7 +569,7 @@ class RT_Kuendigung_Handler_V2 {
                     var $error = $field.closest("td, .form-field").find(".field-error");
                     if ($error.length === 0) {
                         $field.after("<span class=\"field-error\" style=\"color: #dc3232; font-size: 12px; display: block; margin-top: 5px;\">" + message + "</span>");
-                    } else {
+                            } else {
                         $error.text(message);
                     }
                 }
@@ -617,15 +617,15 @@ class RT_Kuendigung_Handler_V2 {
                     if (kuendigungsdatum && beendigungsdatum && beendigungsdatum < kuendigungsdatum) {
                         showFieldError("beendigungsdatum", "Beendigungsdatum muss nach oder gleich Kündigungsdatum sein");
                         isValid = false;
-                        errors.push("Beendigungsdatum darf nicht vor Kündigungsdatum liegen.");
-                    }
+                            errors.push("Beendigungsdatum darf nicht vor Kündigungsdatum liegen.");
+                        }
 
                     // PDF email validation (optional)
                     var emailAddress = $("#kuendigung_email_address").val().trim();
                     if (emailAddress && !isValidEmail(emailAddress)) {
                         showFieldError("kuendigung_email_address", "Ungültige E-Mail-Adresse");
                         isValid = false;
-                        errors.push("Bitte geben Sie eine gültige E-Mail-Adresse für den PDF-Versand ein.");
+                            errors.push("Bitte geben Sie eine gültige E-Mail-Adresse für den PDF-Versand ein.");
                     } else {
                         clearFieldError("kuendigung_email_address");
                     }
@@ -659,8 +659,8 @@ class RT_Kuendigung_Handler_V2 {
                         $("#kuendigung-form-wrapper input, #kuendigung-form-wrapper select, #kuendigung-form-wrapper textarea").each(function() {
                             if ($(this).val() && $(this).attr("id") !== "kuendigung_email_address") {
                                 hasData = true;
-                                return false;
-                            }
+                            return false;
+                        }
                         });
                         
                         if (hasData && !validateForm()) {
@@ -688,7 +688,7 @@ class RT_Kuendigung_Handler_V2 {
                         $(".field-error").remove();
                         $("#kuendigung-error-summary").hide();
                         $("input, select, textarea").css("border-color", "");
-                    } else {
+                                } else {
                         $wrapper.slideDown(200);
                         $header.addClass("active");
                         $icon.text("▲");
@@ -721,7 +721,7 @@ class RT_Kuendigung_Handler_V2 {
                         
                         var toBookkeeping = item.find("#send-to-bookkeeping-send").is(":checked") 
                             || item.find(".send-to-bookkeeping").is(":checked");
-                        
+
                         if (!toEmployee && !toBookkeeping) {
                             alert("Bitte wählen Sie mindestens einen Empfänger aus.");
                             return;

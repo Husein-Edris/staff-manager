@@ -174,13 +174,6 @@ class RT_Admin_Dashboard_V2 {
                                 <th><label for="city"><?php _e('Ort', 'rt-employee-manager-v2'); ?></label></th>
                                 <td><input type="text" name="city" id="city" class="regular-text" /></td>
                             </tr>
-                            <tr>
-                                <th><label for="password"><?php _e('Passwort', 'rt-employee-manager-v2'); ?> *</label></th>
-                                <td>
-                                    <input type="password" name="password" id="password" class="regular-text" required minlength="8" />
-                                    <p class="description"><?php _e('Mindestens 8 Zeichen', 'rt-employee-manager-v2'); ?></p>
-                                </td>
-                            </tr>
                         </table>
                         
                         <p class="submit">
@@ -216,7 +209,7 @@ class RT_Admin_Dashboard_V2 {
         }
         
         // Validate required fields
-        $required_fields = array('company_name', 'email', 'address', 'postal_code', 'password');
+        $required_fields = array('company_name', 'email', 'address', 'postal_code');
         foreach ($required_fields as $field) {
             if (empty($_POST[$field])) {
                 wp_die(sprintf(__('Feld "%s" ist erforderlich.', 'rt-employee-manager-v2'), $field));
@@ -231,17 +224,14 @@ class RT_Admin_Dashboard_V2 {
         $address = sanitize_text_field($_POST['address']);
         $postal_code = sanitize_text_field($_POST['postal_code']);
         $city = sanitize_text_field($_POST['city'] ?? '');
-        $password = $_POST['password']; // Don't sanitize password to preserve special chars
         
         // Check if email already exists
         if (email_exists($email)) {
             wp_die(__('Diese E-Mail-Adresse ist bereits registriert.', 'rt-employee-manager-v2'));
         }
         
-        // Validate password strength
-        if (strlen($password) < 8) {
-            wp_die(__('Das Passwort muss mindestens 8 Zeichen lang sein.', 'rt-employee-manager-v2'));
-        }
+        // Generate random password
+        $password = wp_generate_password(12, true, true);
         
         // Create user account
         $username = sanitize_user($email);
@@ -274,13 +264,20 @@ class RT_Admin_Dashboard_V2 {
             'first_name' => $contact_name,
         ));
         
-        // Send welcome email with login credentials
+        // Get user object for password reset
+        $user = new WP_User($user_id);
+        
+        // Send password reset link instead of password
+        $reset_key = get_password_reset_key($user);
+        $reset_link = network_site_url("wp-login.php?action=rp&key=$reset_key&login=" . rawurlencode($username), 'login');
+        
+        // Send welcome email with password reset link
         $subject = sprintf(__('Ihr Konto bei %s wurde erstellt', 'rt-employee-manager-v2'), get_bloginfo('name'));
         $message = sprintf(
-            __("Hallo %s,\n\nIhr Konto für %s wurde erfolgreich erstellt.\n\nIhre Zugangsdaten:\nBenutzername: %s\nPasswort: [Wie von Ihnen festgelegt]\n\nSie können sich hier anmelden:\n%s\n\nViele Grüße", 'rt-employee-manager-v2'),
-            $contact_name,
+            __("Hallo %s,\n\nIhr Konto für %s wurde erfolgreich erstellt.\n\nBitte setzen Sie Ihr Passwort über folgenden Link:\n%s\n\nSie können sich danach hier anmelden:\n%s\n\nViele Grüße", 'rt-employee-manager-v2'),
+            $contact_name ?: $company_name,
             $company_name,
-            $email,
+            $reset_link,
             wp_login_url()
         );
         
@@ -346,7 +343,7 @@ class RT_Admin_Dashboard_V2 {
                 )
             )
         );
-        
+
         return count(get_posts($args));
     }
 
