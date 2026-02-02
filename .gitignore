@@ -40,3 +40,6 @@ specs/
 
 # Composer lock (optional dependency management - already ignored above)
 # composer.lock
+
+.gemini/*
+/specs-backup

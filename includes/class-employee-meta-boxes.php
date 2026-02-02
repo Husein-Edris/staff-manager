@@ -12,6 +12,7 @@ class RT_Employee_Meta_Boxes_V2 {
     public function __construct() {
         add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
         add_action('save_post', array($this, 'save_employee_meta'), 10, 2);
+        add_action('save_post', array($this, 'ensure_employer_id'), 5, 2); // Lower priority, runs first
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
     }
     
@@ -536,19 +537,14 @@ class RT_Employee_Meta_Boxes_V2 {
         if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
             return;
         }
-        
+
         // Only for our employee post type
         if ($post->post_type !== 'angestellte_v2') {
             return;
         }
-        
-        // Check the nonce
+
+        // Check the nonce (this proves the user submitted the form legitimately)
         if (!isset($_POST['rt_employee_meta_nonce']) || !wp_verify_nonce($_POST['rt_employee_meta_nonce'], 'rt_employee_meta_v2')) {
-            return;
-        }
-        
-        // Make sure user can edit this
-        if (!current_user_can('edit_post', $post_id)) {
             return;
         }
         
@@ -564,8 +560,29 @@ class RT_Employee_Meta_Boxes_V2 {
             'anmerkungen', 'status', 'employer_id'
         );
         
+        // Handle employer assignment FIRST (before saving other fields)
+        $user = wp_get_current_user();
+        if ((in_array('kunden', $user->roles) || in_array('kunden_v2', $user->roles)) && !in_array('administrator', $user->roles)) {
+            // Client users can only assign employees to themselves - set this first
+            $employer_id_for_save = $user->ID;
+        } else if (!empty($_POST['employer_id'])) {
+            // Admins can set employer_id from POST
+            $employer_id_for_save = intval($_POST['employer_id']);
+        } else if (!empty($user->ID)) {
+            // Default to current user if no employer selected
+            $employer_id_for_save = $user->ID;
+        } else {
+            $employer_id_for_save = '';
+        }
+        
         // Go through each field and sanitize
         foreach ($fields as $field) {
+            // Skip employer_id - we handle it separately
+            if ($field === 'employer_id') {
+                $meta_updates[$field] = $employer_id_for_save;
+                continue;
+            }
+            
             $value = isset($_POST[$field]) ? sanitize_text_field($_POST[$field]) : '';
             
             // Quick check on the SVNR format
@@ -610,14 +627,32 @@ class RT_Employee_Meta_Boxes_V2 {
                 add_action('save_post', array($this, 'save_employee_meta'), 10, 2);
             }
         }
-        
-        // Handle employer assignment
+    }
+    
+    /**
+     * Ensure employer_id is set for kunden users (runs on every save, no nonce check)
+     */
+    public function ensure_employer_id($post_id, $post) {
+        if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
+            return;
+        }
+        if ($post->post_type !== 'angestellte_v2') {
+            return;
+        }
+
         $user = wp_get_current_user();
-        if (in_array('kunden_v2', $user->roles) && !in_array('administrator', $user->roles)) {
-            // Client users can only assign employees to themselves
-            update_post_meta($post_id, 'employer_id', $user->ID);
-        } else if (empty($_POST['employer_id']) && !empty($user->ID)) {
-            // Admins get themselves as default if no employer selected
+
+        if ((!in_array('kunden', $user->roles) && !in_array('kunden_v2', $user->roles)) || in_array('administrator', $user->roles)) {
+            return;
+        }
+
+        if ((int) $post->post_author !== (int) $user->ID) {
+            return;
+        }
+
+        // Ensure employer_id is set to current user
+        $current_employer_id = get_post_meta($post_id, 'employer_id', true);
+        if (empty($current_employer_id) || intval($current_employer_id) != intval($user->ID)) {
             update_post_meta($post_id, 'employer_id', $user->ID);
         }
     }

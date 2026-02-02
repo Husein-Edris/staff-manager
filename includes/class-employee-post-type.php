@@ -12,11 +12,11 @@ class RT_Employee_Post_Type_V2 {
     public function __construct() {
         add_action('init', array($this, 'register_post_type'));
         add_action('init', array($this, 'add_capabilities'));
-        add_action('init', array($this, 'fix_missing_employer_ids'));
         add_filter('manage_angestellte_v2_posts_columns', array($this, 'custom_columns'));
         add_action('manage_angestellte_v2_posts_custom_column', array($this, 'custom_column_content'), 10, 2);
         add_action('pre_get_posts', array($this, 'filter_posts_for_kunden'));
         add_filter('map_meta_cap', array($this, 'map_employee_meta_caps'), 10, 4);
+        add_filter('wp_count_posts', array($this, 'filter_counts_for_kunden'), 10, 3);
     }
     
     /**
@@ -139,37 +139,7 @@ class RT_Employee_Post_Type_V2 {
             }
         }
     }
-    
-    /**
-     * Fix missing employer_id for existing employee posts
-     */
-    public function fix_missing_employer_ids() {
-        // Only run once to avoid performance issues
-        if (get_transient('rt_employer_fix_done')) {
-            return;
-        }
-        
-        $posts = get_posts(array(
-            'post_type' => 'angestellte_v2',
-            'post_status' => 'publish',
-            'posts_per_page' => -1,
-            'meta_query' => array(
-                array(
-                    'key' => 'employer_id',
-                    'compare' => 'NOT EXISTS'
-                )
-            )
-        ));
-        
-        foreach ($posts as $post) {
-            // Set employer_id to the post author
-            update_post_meta($post->ID, 'employer_id', $post->post_author);
-        }
-        
-        // Set transient to prevent running again for 24 hours
-        set_transient('rt_employer_fix_done', true, DAY_IN_SECONDS);
-    }
-    
+
     /**
      * Custom admin columns
      */
@@ -255,6 +225,14 @@ class RT_Employee_Post_Type_V2 {
     }
     
     /**
+     * Check if user has a kunde role (kunden or kunden_v2) and is not an admin
+     */
+    private static function is_kunde_user($user) {
+        return (in_array('kunden', $user->roles) || in_array('kunden_v2', $user->roles))
+            && !in_array('administrator', $user->roles);
+    }
+
+    /**
      * Filter posts for kunden users - only show their own employees
      */
     public function filter_posts_for_kunden($query) {
@@ -267,52 +245,67 @@ class RT_Employee_Post_Type_V2 {
         }
         
         $user = wp_get_current_user();
-        if (in_array('kunden_v2', $user->roles) && !in_array('administrator', $user->roles)) {
-            // Only show employees where employer_id matches current user
-            $meta_query = $query->get('meta_query') ?: array();
-            $meta_query[] = array(
-                'key' => 'employer_id',
-                'value' => $user->ID,
-                'compare' => '='
-            );
-            $query->set('meta_query', $meta_query);
+        if (self::is_kunde_user($user)) {
+            $query->set('meta_key', 'employer_id');
+            $query->set('meta_value', $user->ID);
         }
     }
-    
+
+    /**
+     * Filter post counts for kunden users to show only their own
+     */
+    public function filter_counts_for_kunden($counts, $type, $perm) {
+        if ($type !== 'angestellte_v2') {
+            return $counts;
+        }
+
+        $user = wp_get_current_user();
+        if (!self::is_kunde_user($user)) {
+            return $counts;
+        }
+
+        global $wpdb;
+        $results = $wpdb->get_results($wpdb->prepare(
+            "SELECT p.post_status, COUNT(*) AS num_posts FROM {$wpdb->posts} p INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = 'employer_id' AND pm.meta_value = %s WHERE p.post_type = %s GROUP BY p.post_status",
+            $user->ID,
+            'angestellte_v2'
+        ), ARRAY_A);
+
+        $new_counts = new stdClass();
+        foreach (get_post_stati() as $state) {
+            $new_counts->{$state} = 0;
+        }
+        foreach ($results as $row) {
+            $new_counts->{$row['post_status']} = (int) $row['num_posts'];
+        }
+
+        return $new_counts;
+    }
+
     /**
      * Map meta capabilities for employee posts
      */
     public function map_employee_meta_caps($caps, $cap, $user_id, $args) {
-        // Only handle our post type
         if (!isset($args[0]) || get_post_type($args[0]) !== 'angestellte_v2') {
             return $caps;
         }
-        
+
         $post = get_post($args[0]);
-        $post_type = get_post_type_object($post->post_type);
-        
-        // Get the user object
         $user = get_userdata($user_id);
-        
-        // Administrators can do everything
+
         if (in_array('administrator', $user->roles)) {
             return $caps;
         }
-        
-        // For kunden users, check ownership
-        if (in_array('kunden', $user->roles) || in_array('kunden_v2', $user->roles)) {
+
+        if (self::is_kunde_user($user)) {
             $employer_id = get_post_meta($post->ID, 'employer_id', true);
-            
-            // Allow if they are the employer (owner) of this employee
-            if ($employer_id && $employer_id == $user_id) {
-                // Allow ALL employee-related capabilities for owners
-                return array('exist'); // Minimal capability that all users have
-            } else {
-                // If they don't own this employee, deny access
-                return array('do_not_allow');
+            // Allow if employer_id matches, or post has no employer_id yet (new post by this user)
+            if ($employer_id == $user_id || (empty($employer_id) && (int) $post->post_author === (int) $user_id)) {
+                return array('exist');
             }
+            return array('do_not_allow');
         }
-        
+
         return $caps;
     }
 }
