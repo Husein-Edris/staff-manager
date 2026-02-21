@@ -365,6 +365,9 @@ class RT_Admin_Dashboard_V2 {
      * Settings page
      */
     public function settings_page() {
+        // License section at the top
+        $this->render_license_settings_section();
+
         if (isset($_POST['submit'])) {
             update_option('rt_employee_v2_buchhaltung_email', sanitize_email($_POST['buchhaltung_email']));
             update_option('rt_employee_v2_pdf_template_header', sanitize_textarea_field($_POST['pdf_template_header']));
@@ -580,5 +583,116 @@ class RT_Admin_Dashboard_V2 {
             </div>
         </div>
         <?php
+    }
+
+    /**
+     * Render the license info section on the settings page
+     */
+    private function render_license_settings_section()
+    {
+        $key = get_option('rt_employee_v2_license_key', '');
+        $status = get_option('rt_employee_v2_license_status', '');
+        $last_check = (int) get_option('rt_employee_v2_license_checked', 0);
+        $domain = preg_replace('#^https?://#', '', get_site_url());
+        $domain = rtrim($domain, '/');
+
+        // Local dev bypass indicator
+        $is_local = strpos(get_site_url(), 'rt-buchhaltung.local') !== false
+                  || strpos(get_site_url(), 'localhost') !== false;
+
+        // Mask the key for display: show first 4 and last 4 chars
+        $masked_key = '';
+        if (!empty($key)) {
+            $len = strlen($key);
+            if ($len > 8) {
+                $masked_key = substr($key, 0, 4) . str_repeat('•', $len - 8) . substr($key, -4);
+            } else {
+                $masked_key = $key;
+            }
+        }
+
+        $status_label = 'Nicht aktiviert';
+        $status_color = '#999';
+        if ($is_local) {
+            $status_label = 'Lokale Entwicklung (Bypass)';
+            $status_color = '#0073aa';
+        } elseif ($status === 'valid') {
+            $status_label = 'Gültig';
+            $status_color = '#46b450';
+        } elseif ($status === 'invalid') {
+            $status_label = 'Ungültig';
+            $status_color = '#dc3232';
+        }
+
+        ?>
+        <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 20px;">
+            <h2>Lizenz</h2>
+            <table class="form-table">
+                <tr>
+                    <th scope="row">Status</th>
+                    <td>
+                        <span style="color: <?php echo esc_attr($status_color); ?>; font-weight: bold;">
+                            <?php echo esc_html($status_label); ?>
+                        </span>
+                    </td>
+                </tr>
+                <?php if (!empty($key)): ?>
+                <tr>
+                    <th scope="row">Lizenzschlüssel</th>
+                    <td><code><?php echo esc_html($masked_key); ?></code></td>
+                </tr>
+                <?php endif; ?>
+                <tr>
+                    <th scope="row">Domain</th>
+                    <td><code><?php echo esc_html($domain); ?></code></td>
+                </tr>
+                <?php if ($last_check > 0): ?>
+                <tr>
+                    <th scope="row">Letzte Prüfung</th>
+                    <td><?php echo esc_html(date_i18n('d.m.Y H:i', $last_check)); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if (!$is_local && !empty($key)): ?>
+                <tr>
+                    <th scope="row"></th>
+                    <td>
+                        <button type="button" id="rt-deactivate-license-btn" class="button" style="color: #dc3232;">
+                            Lizenz deaktivieren
+                        </button>
+                        <span id="rt-deactivate-spinner" class="spinner" style="float: none;"></span>
+                        <p id="rt-deactivate-message"></p>
+                    </td>
+                </tr>
+                <?php endif; ?>
+            </table>
+        </div>
+        <?php if (!$is_local && !empty($key)): ?>
+        <script>
+        jQuery(document).ready(function($) {
+            $('#rt-deactivate-license-btn').on('click', function() {
+                if (!confirm('Lizenz wirklich deaktivieren? Das Plugin wird danach deaktiviert.')) return;
+
+                var $btn = $(this);
+                var $spinner = $('#rt-deactivate-spinner');
+
+                $btn.prop('disabled', true);
+                $spinner.addClass('is-active');
+
+                $.post(ajaxurl, {
+                    action: 'rt_deactivate_license_v2',
+                    nonce: '<?php echo wp_create_nonce('rt_license_v2'); ?>'
+                }, function(response) {
+                    $btn.prop('disabled', false);
+                    $spinner.removeClass('is-active');
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        $('#rt-deactivate-message').css('color', '#dc3232').text(response.data);
+                    }
+                });
+            });
+        });
+        </script>
+        <?php endif;
     }
 }
