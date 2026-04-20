@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 /**
  * Simple PDF Generator - Creates actual PDF files
  */
-class RT_PDF_Generator_V2 {
+class RT_PDF_Generator {
     
     public function __construct() {
         add_action('wp_ajax_generate_employee_pdf', array($this, 'ajax_generate_employee_pdf'));
@@ -19,7 +19,7 @@ class RT_PDF_Generator_V2 {
      * Generate PDF for employee (AJAX endpoint)
      */
     public function ajax_generate_employee_pdf() {
-        if (!wp_verify_nonce($_POST['nonce'], 'generate_pdf_v2')) {
+        if (!wp_verify_nonce($_POST['nonce'], 'generate_pdf')) {
             wp_send_json_error(__('Sicherheitsfehler.', 'staff-manager'));
         }
         
@@ -41,7 +41,7 @@ class RT_PDF_Generator_V2 {
      * Download employee PDF (AJAX endpoint)
      */
     public function ajax_download_employee_pdf() {
-        if (!wp_verify_nonce($_GET['nonce'], 'download_pdf_v2')) {
+        if (!wp_verify_nonce($_GET['nonce'], 'download_pdf')) {
             wp_die(__('Sicherheitsfehler.', 'staff-manager'));
         }
         
@@ -57,7 +57,7 @@ class RT_PDF_Generator_V2 {
      * Email employee PDF (AJAX endpoint)
      */
     public function ajax_email_employee_pdf() {
-        if (!wp_verify_nonce($_POST['nonce'], 'email_pdf_v2')) {
+        if (!wp_verify_nonce($_POST['nonce'], 'email_pdf')) {
             wp_send_json_error(__('Sicherheitsfehler.', 'staff-manager'));
         }
         
@@ -86,7 +86,7 @@ class RT_PDF_Generator_V2 {
         }
         
         $user = wp_get_current_user();
-        if (in_array('kunden_v2', $user->roles)) {
+        if (in_array('kunden', $user->roles)) {
             $employer_id = get_post_meta($employee_id, 'employer_id', true);
             return $employer_id == $user->ID;
         }
@@ -99,7 +99,7 @@ class RT_PDF_Generator_V2 {
      */
     public function generate_employee_pdf($employee_id) {
         $employee = get_post($employee_id);
-        if (!$employee || $employee->post_type !== 'angestellte_v2') {
+        if (!$employee || $employee->post_type !== 'angestellte') {
             return false;
         }
         

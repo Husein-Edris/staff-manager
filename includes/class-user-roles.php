@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 /**
  * User Roles Management - Simplified
  */
-class RT_User_Roles_V2 {
+class RT_User_Roles {
     
     public function __construct() {
         add_action('admin_init', array($this, 'restrict_admin_access'));
@@ -25,7 +25,7 @@ class RT_User_Roles_V2 {
         }
 
         $user = wp_get_current_user();
-        if ((!in_array('kunden', $user->roles) && !in_array('kunden_v2', $user->roles)) || in_array('administrator', $user->roles)) {
+        if ((!in_array('kunden', $user->roles) && !in_array('kunden', $user->roles)) || in_array('administrator', $user->roles)) {
             return;
         }
         
@@ -65,9 +65,9 @@ class RT_User_Roles_V2 {
                 }
             }
             
-            // Only allow access to angestellte_v2 post type
-            if ($post_type !== 'angestellte_v2') {
-                wp_redirect(admin_url('edit.php?post_type=angestellte_v2'));
+            // Only allow access to angestellte post type
+            if ($post_type !== 'angestellte') {
+                wp_redirect(admin_url('edit.php?post_type=angestellte'));
                 exit;
             }
             
@@ -75,7 +75,7 @@ class RT_User_Roles_V2 {
             if ($current_page === 'post.php' && $check_post_id) {
                 $employer_id = get_post_meta($check_post_id, 'employer_id', true);
                 if ($employer_id && $employer_id != $user->ID) {
-                    wp_redirect(admin_url('edit.php?post_type=angestellte_v2'));
+                    wp_redirect(admin_url('edit.php?post_type=angestellte'));
                     exit;
                 }
             }
@@ -89,7 +89,7 @@ class RT_User_Roles_V2 {
         
         if (!$is_allowed) {
             // Redirect to employee list
-            wp_redirect(admin_url('edit.php?post_type=angestellte_v2'));
+            wp_redirect(admin_url('edit.php?post_type=angestellte'));
             exit;
         }
     }
@@ -100,8 +100,8 @@ class RT_User_Roles_V2 {
     public function customize_admin_menu() {
         $user = wp_get_current_user();
         
-        // Only customize menu for kunden_v2 users (not administrators)
-        if (!in_array('kunden_v2', $user->roles) || in_array('administrator', $user->roles)) {
+        // Only customize menu for kunden users (not administrators)
+        if (!in_array('kunden', $user->roles) || in_array('administrator', $user->roles)) {
             return;
         }
         
@@ -181,10 +181,10 @@ class RT_User_Roles_V2 {
     <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px; margin: 20px 0;">
         <h3><?php _e('Schnellaktionen', 'staff-manager'); ?></h3>
         <p>
-            <a href="<?php echo admin_url('post-new.php?post_type=angestellte_v2'); ?>" class="button button-primary">
+            <a href="<?php echo admin_url('post-new.php?post_type=angestellte'); ?>" class="button button-primary">
                 <?php _e('Neuen Mitarbeiter hinzufügen', 'staff-manager'); ?>
             </a>
-            <a href="<?php echo admin_url('edit.php?post_type=angestellte_v2'); ?>" class="button">
+            <a href="<?php echo admin_url('edit.php?post_type=angestellte'); ?>" class="button">
                 <?php _e('Alle Mitarbeiter anzeigen', 'staff-manager'); ?>
             </a>
         </p>
@@ -204,7 +204,7 @@ class RT_User_Roles_V2 {
      */
     public function hide_admin_bar_for_kunden($show) {
         $user = wp_get_current_user();
-        if (in_array('kunden_v2', $user->roles) && !in_array('administrator', $user->roles)) {
+        if (in_array('kunden', $user->roles) && !in_array('administrator', $user->roles)) {
             return false;
         }
         return $show;
@@ -217,7 +217,7 @@ class RT_User_Roles_V2 {
         global $wp_admin_bar;
         
         $user = wp_get_current_user();
-        if (!in_array('kunden_v2', $user->roles) || in_array('administrator', $user->roles)) {
+        if (!in_array('kunden', $user->roles) || in_array('administrator', $user->roles)) {
             return;
         }
         
@@ -247,7 +247,7 @@ class RT_User_Roles_V2 {
      */
     private function get_employee_count($user_id) {
         $args = array(
-            'post_type' => 'angestellte_v2',
+            'post_type' => 'angestellte',
             'post_status' => 'publish',
             'posts_per_page' => -1,
             'meta_query' => array(
@@ -284,7 +284,7 @@ class RT_User_Roles_V2 {
      */
     private function display_recent_employees($user_id, $limit = 5) {
         $args = array(
-            'post_type' => 'angestellte_v2',
+            'post_type' => 'angestellte',
             'post_status' => 'publish',
             'posts_per_page' => $limit,
             'orderby' => 'date',
@@ -337,7 +337,7 @@ class RT_User_Roles_V2 {
         echo '</tbody></table>';
         
         if (count($employees) >= $limit) {
-            echo '<p><a href="' . admin_url('edit.php?post_type=angestellte_v2') . '">' . __('Alle Mitarbeiter anzeigen →', 'staff-manager') . '</a></p>';
+            echo '<p><a href="' . admin_url('edit.php?post_type=angestellte') . '">' . __('Alle Mitarbeiter anzeigen →', 'staff-manager') . '</a></p>';
         }
     }
 }

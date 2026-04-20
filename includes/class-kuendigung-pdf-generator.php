@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 /**
  * Handles PDF generation and email sending for Kündigungen
  */
-class RT_Kuendigung_PDF_Generator_V2 {
+class RT_Kuendigung_PDF_Generator {
     
     
     /**
@@ -110,9 +110,9 @@ class RT_Kuendigung_PDF_Generator_V2 {
         }
         
         // Get PDF header/footer text from settings (same as MITARBEITERDATENBLATT)
-        $pdf_header_text = get_option('rt_employee_v2_pdf_template_header', 'Mitarbeiterverwaltung');
-        $pdf_footer_text = get_option('rt_employee_v2_pdf_template_footer', '');
-        $company_address = get_option('rt_employee_v2_company_address', '');
+        $pdf_header_text = get_option('staff_manager_pdf_template_header', 'Mitarbeiterverwaltung');
+        $pdf_footer_text = get_option('staff_manager_pdf_template_footer', '');
+        $company_address = get_option('staff_manager_company_address', '');
         $company = get_bloginfo('name');
         
         // Generate Kündigung text
@@ -489,7 +489,7 @@ class RT_Kuendigung_PDF_Generator_V2 {
         }
         
         if ($send_to_bookkeeping) {
-            $bookkeeping_email = get_option('rt_employee_v2_buchhaltung_email', '');
+            $bookkeeping_email = get_option('staff_manager_buchhaltung_email', '');
             if (!empty($bookkeeping_email)) {
                 $recipients[] = $bookkeeping_email;
             }
@@ -518,8 +518,8 @@ class RT_Kuendigung_PDF_Generator_V2 {
         $body .= $kuendigung_data['employer_name'] . "\n";
         
         // Email headers
-        $sender_name = get_option('rt_employee_v2_email_sender_name', 'WordPress');
-        $sender_email = get_option('rt_employee_v2_email_sender_email', get_option('admin_email'));
+        $sender_name = get_option('staff_manager_email_sender_name', 'WordPress');
+        $sender_email = get_option('staff_manager_email_sender_email', get_option('admin_email'));
         
         $headers = array(
             'Content-Type: text/plain; charset=UTF-8',

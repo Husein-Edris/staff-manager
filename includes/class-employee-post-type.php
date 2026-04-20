@@ -7,13 +7,13 @@ if (!defined('ABSPATH')) {
 /**
  * Employee Post Type - Simplified
  */
-class RT_Employee_Post_Type_V2 {
+class RT_Employee_Post_Type {
     
     public function __construct() {
         add_action('init', array($this, 'register_post_type'));
         add_action('init', array($this, 'add_capabilities'));
-        add_filter('manage_angestellte_v2_posts_columns', array($this, 'custom_columns'));
-        add_action('manage_angestellte_v2_posts_custom_column', array($this, 'custom_column_content'), 10, 2);
+        add_filter('manage_angestellte_posts_columns', array($this, 'custom_columns'));
+        add_action('manage_angestellte_posts_custom_column', array($this, 'custom_column_content'), 10, 2);
         add_action('pre_get_posts', array($this, 'filter_posts_for_kunden'));
         add_filter('map_meta_cap', array($this, 'map_employee_meta_caps'), 10, 4);
         add_filter('wp_count_posts', array($this, 'filter_counts_for_kunden'), 10, 3);
@@ -44,22 +44,22 @@ class RT_Employee_Post_Type_V2 {
             'show_in_menu' => true,
             'menu_icon' => 'dashicons-groups',
             'menu_position' => 25,
-            'capability_type' => array('angestellte_v2', 'angestellte_v2s'),
+            'capability_type' => array('angestellte', 'angestelltes'),
             'capabilities' => array(
-                'edit_post' => 'edit_angestellte_v2',
-                'read_post' => 'read_angestellte_v2',
-                'delete_post' => 'delete_angestellte_v2',
-                'edit_posts' => 'edit_angestellte_v2s',
-                'edit_others_posts' => 'edit_others_angestellte_v2s',
-                'publish_posts' => 'publish_angestellte_v2s',
-                'read_private_posts' => 'read_private_angestellte_v2s',
-                'delete_posts' => 'delete_angestellte_v2s',
-                'delete_private_posts' => 'delete_private_angestellte_v2s',
-                'delete_published_posts' => 'delete_published_angestellte_v2s',
-                'delete_others_posts' => 'delete_others_angestellte_v2s',
-                'edit_private_posts' => 'edit_private_angestellte_v2s',
-                'edit_published_posts' => 'edit_published_angestellte_v2s',
-                'create_posts' => 'edit_angestellte_v2s',
+                'edit_post' => 'edit_angestellte',
+                'read_post' => 'read_angestellte',
+                'delete_post' => 'delete_angestellte',
+                'edit_posts' => 'edit_angestelltes',
+                'edit_others_posts' => 'edit_others_angestelltes',
+                'publish_posts' => 'publish_angestelltes',
+                'read_private_posts' => 'read_private_angestelltes',
+                'delete_posts' => 'delete_angestelltes',
+                'delete_private_posts' => 'delete_private_angestelltes',
+                'delete_published_posts' => 'delete_published_angestelltes',
+                'delete_others_posts' => 'delete_others_angestelltes',
+                'edit_private_posts' => 'edit_private_angestelltes',
+                'edit_published_posts' => 'edit_published_angestelltes',
+                'create_posts' => 'edit_angestelltes',
             ),
             'map_meta_cap' => true,
             'hierarchical' => false,
@@ -69,7 +69,7 @@ class RT_Employee_Post_Type_V2 {
             'query_var' => false,
         );
         
-        register_post_type('angestellte_v2', $args);
+        register_post_type('angestellte', $args);
     }
     
     /**
@@ -78,19 +78,19 @@ class RT_Employee_Post_Type_V2 {
     public function add_capabilities() {
         // Define all employee capabilities
         $employee_caps = array(
-            'edit_angestellte_v2',
-            'read_angestellte_v2',
-            'delete_angestellte_v2',
-            'edit_angestellte_v2s',
-            'edit_others_angestellte_v2s',
-            'publish_angestellte_v2s',
-            'read_private_angestellte_v2s',
-            'delete_angestellte_v2s',
-            'delete_private_angestellte_v2s',
-            'delete_published_angestellte_v2s',
-            'delete_others_angestellte_v2s',
-            'edit_private_angestellte_v2s',
-            'edit_published_angestellte_v2s',
+            'edit_angestellte',
+            'read_angestellte',
+            'delete_angestellte',
+            'edit_angestelltes',
+            'edit_others_angestelltes',
+            'publish_angestelltes',
+            'read_private_angestelltes',
+            'delete_angestelltes',
+            'delete_private_angestelltes',
+            'delete_published_angestelltes',
+            'delete_others_angestelltes',
+            'edit_private_angestelltes',
+            'edit_published_angestelltes',
         );
         
         // Add all capabilities to administrator
@@ -101,22 +101,22 @@ class RT_Employee_Post_Type_V2 {
             }
         }
         
-        // Add limited capabilities to kunden_v2 role
-        $kunden_v2_role = get_role('kunden_v2');
-        if ($kunden_v2_role) {
+        // Add limited capabilities to kunden role
+        $kunden_role = get_role('kunden');
+        if ($kunden_role) {
             $kunden_caps = array(
-                'edit_angestellte_v2',
-                'read_angestellte_v2',
-                'delete_angestellte_v2',
-                'edit_angestellte_v2s',
-                'publish_angestellte_v2s',
-                'delete_angestellte_v2s',
-                'delete_published_angestellte_v2s',
-                'edit_published_angestellte_v2s',
+                'edit_angestellte',
+                'read_angestellte',
+                'delete_angestellte',
+                'edit_angestelltes',
+                'publish_angestelltes',
+                'delete_angestelltes',
+                'delete_published_angestelltes',
+                'edit_published_angestelltes',
             );
             
             foreach ($kunden_caps as $cap) {
-                $kunden_v2_role->add_cap($cap);
+                $kunden_role->add_cap($cap);
             }
         }
         
@@ -124,14 +124,14 @@ class RT_Employee_Post_Type_V2 {
         $kunden_role = get_role('kunden');
         if ($kunden_role) {
             $kunden_caps = array(
-                'edit_angestellte_v2',
-                'read_angestellte_v2',
-                'delete_angestellte_v2',
-                'edit_angestellte_v2s',
-                'publish_angestellte_v2s',
-                'delete_angestellte_v2s',
-                'delete_published_angestellte_v2s',
-                'edit_published_angestellte_v2s',
+                'edit_angestellte',
+                'read_angestellte',
+                'delete_angestellte',
+                'edit_angestelltes',
+                'publish_angestelltes',
+                'delete_angestelltes',
+                'delete_published_angestelltes',
+                'edit_published_angestelltes',
             );
             
             foreach ($kunden_caps as $cap) {
@@ -213,7 +213,7 @@ class RT_Employee_Post_Type_V2 {
                 // Generate direct PDF view URL
                 $pdf_url = wp_nonce_url(
                     admin_url('admin-ajax.php?action=generate_and_view_employee_pdf&employee_id=' . $post_id),
-                    'generate_view_pdf_v2',
+                    'generate_view_pdf',
                     'nonce'
                 );
                 
@@ -225,10 +225,10 @@ class RT_Employee_Post_Type_V2 {
     }
     
     /**
-     * Check if user has a kunde role (kunden or kunden_v2) and is not an admin
+     * Check if user has a kunde role (kunden or kunden) and is not an admin
      */
     private static function is_kunde_user($user) {
-        return (in_array('kunden', $user->roles) || in_array('kunden_v2', $user->roles))
+        return (in_array('kunden', $user->roles) || in_array('kunden', $user->roles))
             && !in_array('administrator', $user->roles);
     }
 
@@ -240,7 +240,7 @@ class RT_Employee_Post_Type_V2 {
             return;
         }
         
-        if ($query->get('post_type') !== 'angestellte_v2') {
+        if ($query->get('post_type') !== 'angestellte') {
             return;
         }
         
@@ -255,7 +255,7 @@ class RT_Employee_Post_Type_V2 {
      * Filter post counts for kunden users to show only their own
      */
     public function filter_counts_for_kunden($counts, $type, $perm) {
-        if ($type !== 'angestellte_v2') {
+        if ($type !== 'angestellte') {
             return $counts;
         }
 
@@ -268,7 +268,7 @@ class RT_Employee_Post_Type_V2 {
         $results = $wpdb->get_results($wpdb->prepare(
             "SELECT p.post_status, COUNT(*) AS num_posts FROM {$wpdb->posts} p INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = 'employer_id' AND pm.meta_value = %s WHERE p.post_type = %s GROUP BY p.post_status",
             $user->ID,
-            'angestellte_v2'
+            'angestellte'
         ), ARRAY_A);
 
         $new_counts = new stdClass();
@@ -286,7 +286,7 @@ class RT_Employee_Post_Type_V2 {
      * Map meta capabilities for employee posts
      */
     public function map_employee_meta_caps($caps, $cap, $user_id, $args) {
-        if (!isset($args[0]) || get_post_type($args[0]) !== 'angestellte_v2') {
+        if (!isset($args[0]) || get_post_type($args[0]) !== 'angestellte') {
             return $caps;
         }
 

@@ -7,13 +7,13 @@ if (!defined('ABSPATH')) {
 /**
  * Handles Kündigung creation, PDF generation, and email sending
  */
-class RT_Kuendigung_Handler_V2 {
+class RT_Kuendigung_Handler {
     
     public function __construct() {
         add_action('add_meta_boxes', array($this, 'add_kuendigung_meta_box'));
-        add_action('save_post_angestellte_v2', array($this, 'save_kuendigung_on_post_save'), 20);
+        add_action('save_post_angestellte', array($this, 'save_kuendigung_on_post_save'), 20);
         add_action('admin_enqueue_scripts', array($this, 'enqueue_kuendigung_scripts'));
-        add_action('wp_ajax_email_kuendigung_v2', array($this, 'ajax_email_kuendigung'));
+        add_action('wp_ajax_email_kuendigung', array($this, 'ajax_email_kuendigung'));
     }
     
     /**
@@ -21,10 +21,10 @@ class RT_Kuendigung_Handler_V2 {
      */
     public function add_kuendigung_meta_box() {
         add_meta_box(
-            'rt_employee_kuendigung_v2',
+            'rt_employee_kuendigung',
             __('Kündigung', 'staff-manager'),
             array($this, 'kuendigung_meta_box_callback'),
-            'angestellte_v2',
+            'angestellte',
             'side',
             'default'
         );
@@ -45,7 +45,7 @@ class RT_Kuendigung_Handler_V2 {
         
         // Check if employee already has a Kündigung
         $existing_kuendigungen = get_posts(array(
-            'post_type' => 'kuendigung_v2',
+            'post_type' => 'kuendigung',
             'meta_query' => array(
                 array(
                     'key' => 'employee_id',
@@ -60,7 +60,7 @@ class RT_Kuendigung_Handler_V2 {
         $employee_data = $this->get_employee_data($post->ID);
         $employee_email = $employee_data['email'] ?? '';
         $ajax_url = admin_url('admin-ajax.php');
-        $nonce = wp_create_nonce('email_kuendigung_v2');
+        $nonce = wp_create_nonce('email_kuendigung');
         
         // Check if Kündigung was just created
         $kuendigung_created = isset($_GET['kuendigung_created']) && $_GET['kuendigung_created'] === '1';
@@ -243,7 +243,7 @@ class RT_Kuendigung_Handler_V2 {
                 <p class="description" style="margin-bottom: 15px; color: #666; font-size: 12px;">
                     <?php _e('Füllen Sie die Felder aus und klicken Sie auf "Aktualisieren" (oben rechts), um die Kündigung zu erstellen und den Status zu ändern.', 'staff-manager'); ?>
                 </p>
-                <?php wp_nonce_field('save_kuendigung_v2', 'kuendigung_nonce'); ?>
+                <?php wp_nonce_field('save_kuendigung', 'kuendigung_nonce'); ?>
                 <table class="form-table">
                         <tr>
                             <th scope="row"><label for="kuendigungsart"><?php _e('Kündigungsart', 'staff-manager'); ?> *</label></th>
@@ -296,7 +296,7 @@ class RT_Kuendigung_Handler_V2 {
                                 <?php $employee_data = $this->get_employee_data($post->ID); $employee_email = $employee_data['email'] ?? ''; ?>
                                 <input type="email" name="kuendigung_email_address" id="kuendigung_email_address" placeholder="<?php _e('E-Mail-Adresse eingeben', 'staff-manager'); ?>" value="<?php echo esc_attr($employee_email); ?>" class="regular-text" />
                                 <p class="description"><?php _e('Optional: E-Mail-Adresse für automatischen PDF-Versand nach dem Speichern.', 'staff-manager'); ?></p>
-                                <?php $buchhaltung_email = get_option('rt_employee_v2_buchhaltung_email', ''); ?>
+                                <?php $buchhaltung_email = get_option('staff_manager_buchhaltung_email', ''); ?>
                                 <?php if (!empty($buchhaltung_email)): ?>
                                 <p style="margin-top: 8px;">
                                     <label>
@@ -372,7 +372,7 @@ class RT_Kuendigung_Handler_V2 {
                         </label></p>
 
                     <?php 
-                                    $buchhaltung_email = get_option('rt_employee_v2_buchhaltung_email', '');
+                                    $buchhaltung_email = get_option('staff_manager_buchhaltung_email', '');
                                     if (!empty($buchhaltung_email)): 
                                     ?>
                     <p><label style="display: block;">
@@ -417,7 +417,7 @@ class RT_Kuendigung_Handler_V2 {
         }
         
         // Check if Kündigung form was submitted
-        if (!isset($_POST['kuendigung_nonce']) || !wp_verify_nonce($_POST['kuendigung_nonce'], 'save_kuendigung_v2')) {
+        if (!isset($_POST['kuendigung_nonce']) || !wp_verify_nonce($_POST['kuendigung_nonce'], 'save_kuendigung')) {
             return;
         }
         
@@ -463,7 +463,7 @@ class RT_Kuendigung_Handler_V2 {
         // Create Kündigung post
         $user = wp_get_current_user();
         $kuendigung_id = wp_insert_post(array(
-            'post_type' => 'kuendigung_v2',
+            'post_type' => 'kuendigung',
             'post_title' => sprintf(__('Kündigung: %s - %s', 'staff-manager'), $employee_name, date_i18n('d.m.Y', $kuendigungsdatum)),
             'post_status' => 'publish',
             'post_author' => $user->ID
@@ -502,7 +502,7 @@ class RT_Kuendigung_Handler_V2 {
             $email_address = sanitize_email($_POST['kuendigung_email_address']);
             $send_to_bookkeeping = !empty($_POST['send_to_bookkeeping_on_create']);
             
-            $pdf_generator = new RT_Kuendigung_PDF_Generator_V2();
+            $pdf_generator = new RT_Kuendigung_PDF_Generator();
             $result = $pdf_generator->send_kuendigung_email_manual($kuendigung_id, $post_id, $email_address, true, $send_to_bookkeeping);
             
             if ($result['success']) {
@@ -525,14 +525,14 @@ class RT_Kuendigung_Handler_V2 {
         }
         
         global $post_type;
-        if ($post_type !== 'angestellte_v2') {
+        if ($post_type !== 'angestellte') {
             return;
         }
         
         wp_enqueue_script('jquery');
         
         $ajax_url = admin_url('admin-ajax.php');
-        $nonce = wp_create_nonce('email_kuendigung_v2');
+        $nonce = wp_create_nonce('email_kuendigung');
         
         // Localize script data - attach to jquery
         wp_localize_script('jquery', 'rtKuendigungV2', array(
@@ -739,7 +739,7 @@ class RT_Kuendigung_Handler_V2 {
                             url: rtKuendigungV2.ajaxurl,
                             type: "POST",
                             data: {
-                                action: "email_kuendigung_v2",
+                                action: "email_kuendigung",
                                 kuendigung_id: button.data("kuendigung-id"),
                                 employee_id: button.data("employee-id"),
                                 employee_email: email,
@@ -802,7 +802,7 @@ JS;
      * AJAX handler to send Kündigung email
      */
     public function ajax_email_kuendigung() {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'email_kuendigung_v2')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'email_kuendigung')) {
             wp_send_json_error('Security error');
         }
         
@@ -816,14 +816,14 @@ JS;
         // Permission check
         $user = wp_get_current_user();
         $is_admin = current_user_can('manage_options');
-        $is_customer = in_array('kunden_v2', $user->roles);
+        $is_customer = in_array('kunden', $user->roles);
         
         if (!$is_admin && !$is_customer) {
             wp_send_json_error('No permission');
         }
         
         $kuendigung = get_post($kuendigung_id);
-        if (!$kuendigung || $kuendigung->post_type !== 'kuendigung_v2') {
+        if (!$kuendigung || $kuendigung->post_type !== 'kuendigung') {
             wp_send_json_error('Invalid Kündigung');
         }
         
@@ -849,7 +849,7 @@ JS;
         }
         
         // Generate PDF and send email
-        $pdf_generator = new RT_Kuendigung_PDF_Generator_V2();
+        $pdf_generator = new RT_Kuendigung_PDF_Generator();
         $result = $pdf_generator->send_kuendigung_email_manual($kuendigung_id, $employee_id, $employee_email, $send_to_employee, $send_to_bookkeeping);
         
         if ($result['success']) {

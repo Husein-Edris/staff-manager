@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 /**
  * Kündigung Post Type - Termination notices
  */
-class RT_Kuendigung_Post_Type_V2 {
+class RT_Kuendigung_Post_Type {
     
     public function __construct() {
         add_action('init', array($this, 'register_post_type'));
@@ -37,22 +37,22 @@ class RT_Kuendigung_Post_Type_V2 {
             'public' => false,
             'show_ui' => true,
             'show_in_menu' => false, // Hidden from main menu, accessed via employee screen
-            'capability_type' => array('kuendigung_v2', 'kuendigung_v2s'),
+            'capability_type' => array('kuendigung', 'kuendigungs'),
             'capabilities' => array(
-                'edit_post' => 'edit_kuendigung_v2',
-                'read_post' => 'read_kuendigung_v2',
-                'delete_post' => 'delete_kuendigung_v2',
-                'edit_posts' => 'edit_kuendigung_v2s',
-                'edit_others_posts' => 'edit_others_kuendigung_v2s',
-                'publish_posts' => 'publish_kuendigung_v2s',
-                'read_private_posts' => 'read_private_kuendigung_v2s',
-                'delete_posts' => 'delete_kuendigung_v2s',
-                'delete_private_posts' => 'delete_private_kuendigung_v2s',
-                'delete_published_posts' => 'delete_published_kuendigung_v2s',
-                'delete_others_posts' => 'delete_others_kuendigung_v2s',
-                'edit_private_posts' => 'edit_private_kuendigung_v2s',
-                'edit_published_posts' => 'edit_published_kuendigung_v2s',
-                'create_posts' => 'edit_kuendigung_v2s',
+                'edit_post' => 'edit_kuendigung',
+                'read_post' => 'read_kuendigung',
+                'delete_post' => 'delete_kuendigung',
+                'edit_posts' => 'edit_kuendigungs',
+                'edit_others_posts' => 'edit_others_kuendigungs',
+                'publish_posts' => 'publish_kuendigungs',
+                'read_private_posts' => 'read_private_kuendigungs',
+                'delete_posts' => 'delete_kuendigungs',
+                'delete_private_posts' => 'delete_private_kuendigungs',
+                'delete_published_posts' => 'delete_published_kuendigungs',
+                'delete_others_posts' => 'delete_others_kuendigungs',
+                'edit_private_posts' => 'edit_private_kuendigungs',
+                'edit_published_posts' => 'edit_published_kuendigungs',
+                'create_posts' => 'edit_kuendigungs',
             ),
             'map_meta_cap' => true,
             'hierarchical' => false,
@@ -62,7 +62,7 @@ class RT_Kuendigung_Post_Type_V2 {
             'query_var' => false,
         );
         
-        register_post_type('kuendigung_v2', $args);
+        register_post_type('kuendigung', $args);
     }
     
     /**
@@ -70,19 +70,19 @@ class RT_Kuendigung_Post_Type_V2 {
      */
     public function add_capabilities() {
         $kuendigung_caps = array(
-            'edit_kuendigung_v2',
-            'read_kuendigung_v2',
-            'delete_kuendigung_v2',
-            'edit_kuendigung_v2s',
-            'edit_others_kuendigung_v2s',
-            'publish_kuendigung_v2s',
-            'read_private_kuendigung_v2s',
-            'delete_kuendigung_v2s',
-            'delete_private_kuendigung_v2s',
-            'delete_published_kuendigung_v2s',
-            'delete_others_kuendigung_v2s',
-            'edit_private_kuendigung_v2s',
-            'edit_published_kuendigung_v2s',
+            'edit_kuendigung',
+            'read_kuendigung',
+            'delete_kuendigung',
+            'edit_kuendigungs',
+            'edit_others_kuendigungs',
+            'publish_kuendigungs',
+            'read_private_kuendigungs',
+            'delete_kuendigungs',
+            'delete_private_kuendigungs',
+            'delete_published_kuendigungs',
+            'delete_others_kuendigungs',
+            'edit_private_kuendigungs',
+            'edit_published_kuendigungs',
         );
         
         // Add all capabilities to administrator
@@ -93,22 +93,22 @@ class RT_Kuendigung_Post_Type_V2 {
             }
         }
         
-        // Add limited capabilities to kunden_v2 role
-        $kunden_v2_role = get_role('kunden_v2');
-        if ($kunden_v2_role) {
+        // Add limited capabilities to kunden role
+        $kunden_role = get_role('kunden');
+        if ($kunden_role) {
             $kunden_caps = array(
-                'edit_kuendigung_v2',
-                'read_kuendigung_v2',
-                'delete_kuendigung_v2',
-                'edit_kuendigung_v2s',
-                'publish_kuendigung_v2s',
-                'delete_kuendigung_v2s',
-                'delete_published_kuendigung_v2s',
-                'edit_published_kuendigung_v2s',
+                'edit_kuendigung',
+                'read_kuendigung',
+                'delete_kuendigung',
+                'edit_kuendigungs',
+                'publish_kuendigungs',
+                'delete_kuendigungs',
+                'delete_published_kuendigungs',
+                'edit_published_kuendigungs',
             );
             
             foreach ($kunden_caps as $cap) {
-                $kunden_v2_role->add_cap($cap);
+                $kunden_role->add_cap($cap);
             }
         }
     }

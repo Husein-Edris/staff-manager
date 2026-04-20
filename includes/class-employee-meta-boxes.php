@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 /**
  * Employee form fields and PDF actions
  */
-class RT_Employee_Meta_Boxes_V2 {
+class RT_Employee_Meta_Boxes {
     
     public function __construct() {
         add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
@@ -21,20 +21,20 @@ class RT_Employee_Meta_Boxes_V2 {
      */
     public function add_meta_boxes() {
         add_meta_box(
-            'rt_employee_details_v2',
+            'rt_employee_details',
             __('Mitarbeiterdaten', 'staff-manager'),
             array($this, 'employee_meta_box_callback'),
-            'angestellte_v2',
+            'angestellte',
             'normal',
             'high'
         );
         
         // Add PDF actions meta box
         add_meta_box(
-            'rt_employee_pdf_actions_v2',
+            'rt_employee_pdf_actions',
             __('PDF Aktionen', 'staff-manager'),
             array($this, 'pdf_actions_meta_box_callback'),
-            'angestellte_v2',
+            'angestellte',
             'side',
             'high'
         );
@@ -44,7 +44,7 @@ class RT_Employee_Meta_Boxes_V2 {
      * Show the main employee form
      */
     public function employee_meta_box_callback($post) {
-        wp_nonce_field('rt_employee_meta_v2', 'rt_employee_meta_nonce');
+        wp_nonce_field('rt_employee_meta', 'rt_employee_meta_nonce');
         
         // Grab any existing data we have for this employee
         $data = $this->get_employee_data($post->ID);
@@ -330,7 +330,7 @@ class RT_Employee_Meta_Boxes_V2 {
                 <select name="employer_id" id="employer_id">
                     <option value=""><?php _e('Bitte wählen', 'staff-manager'); ?></option>
                     <?php
-                                $users = get_users(array('role' => 'kunden_v2'));
+                                $users = get_users(array('role' => 'kunden'));
                                 foreach ($users as $user): ?>
                     <option value="<?php echo esc_attr($user->ID); ?>"
                         <?php selected($data['employer_id'], $user->ID); ?>>
@@ -430,7 +430,7 @@ class RT_Employee_Meta_Boxes_V2 {
     <?php endif; ?>
 
     <!-- PDF Actions -->
-    <a href="<?php echo wp_nonce_url(admin_url('admin-ajax.php?action=generate_and_view_employee_pdf&employee_id=' . $post->ID), 'generate_view_pdf_v2', 'nonce'); ?>"
+    <a href="<?php echo wp_nonce_url(admin_url('admin-ajax.php?action=generate_and_view_employee_pdf&employee_id=' . $post->ID), 'generate_view_pdf', 'nonce'); ?>"
         target="_blank" class="button button-primary" style="width: 100%; text-align: center;">
         <?php _e('PDF anzeigen', 'staff-manager'); ?>
     </a>
@@ -454,7 +454,7 @@ class RT_Employee_Meta_Boxes_V2 {
                 </label></p>
 
             <?php 
-                    $buchhaltung_email = get_option('rt_employee_v2_buchhaltung_email', '');
+                    $buchhaltung_email = get_option('staff_manager_buchhaltung_email', '');
                     if (!empty($buchhaltung_email)): 
                     ?>
             <p><label style="display: block;">
@@ -539,12 +539,12 @@ class RT_Employee_Meta_Boxes_V2 {
         }
 
         // Only for our employee post type
-        if ($post->post_type !== 'angestellte_v2') {
+        if ($post->post_type !== 'angestellte') {
             return;
         }
 
         // Check the nonce (this proves the user submitted the form legitimately)
-        if (!isset($_POST['rt_employee_meta_nonce']) || !wp_verify_nonce($_POST['rt_employee_meta_nonce'], 'rt_employee_meta_v2')) {
+        if (!isset($_POST['rt_employee_meta_nonce']) || !wp_verify_nonce($_POST['rt_employee_meta_nonce'], 'rt_employee_meta')) {
             return;
         }
         
@@ -562,7 +562,7 @@ class RT_Employee_Meta_Boxes_V2 {
         
         // Handle employer assignment FIRST (before saving other fields)
         $user = wp_get_current_user();
-        if ((in_array('kunden', $user->roles) || in_array('kunden_v2', $user->roles)) && !in_array('administrator', $user->roles)) {
+        if ((in_array('kunden', $user->roles) || in_array('kunden', $user->roles)) && !in_array('administrator', $user->roles)) {
             // Client users can only assign employees to themselves - set this first
             $employer_id_for_save = $user->ID;
         } else if (!empty($_POST['employer_id'])) {
@@ -636,13 +636,13 @@ class RT_Employee_Meta_Boxes_V2 {
         if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
             return;
         }
-        if ($post->post_type !== 'angestellte_v2') {
+        if ($post->post_type !== 'angestellte') {
             return;
         }
 
         $user = wp_get_current_user();
 
-        if ((!in_array('kunden', $user->roles) && !in_array('kunden_v2', $user->roles)) || in_array('administrator', $user->roles)) {
+        if ((!in_array('kunden', $user->roles) && !in_array('kunden', $user->roles)) || in_array('administrator', $user->roles)) {
             return;
         }
 
@@ -677,7 +677,7 @@ class RT_Employee_Meta_Boxes_V2 {
         }
 
         global $post_type;
-        if ($post_type !== 'angestellte_v2') {
+        if ($post_type !== 'angestellte') {
             return;
         }
 
@@ -687,19 +687,19 @@ class RT_Employee_Meta_Boxes_V2 {
             'staff-manager-admin',
             false, // No source file, we'll use inline
             array('jquery'),
-            RT_EMPLOYEE_V2_VERSION,
+            RT_EMPLOYEE_VERSION,
             true // In footer for better execution timing
         );
         
         // Localize script with AJAX URL and nonce
         wp_localize_script('staff-manager-admin', 'rtEmployeeManagerV2', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('email_pdf_v2')
+            'nonce' => wp_create_nonce('email_pdf')
         ));
         
         // Add our inline script
         $ajax_url = esc_js(admin_url('admin-ajax.php'));
-        $nonce = wp_create_nonce('email_pdf_v2');
+        $nonce = wp_create_nonce('email_pdf');
         
         wp_add_inline_script('staff-manager-admin', '
             (function($) {

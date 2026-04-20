@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 /**
  * Admin Dashboard - Simplified admin interface for administrators
  */
-class RT_Admin_Dashboard_V2 {
+class RT_Admin_Dashboard {
     
     public function __construct() {
         if (!current_user_can('manage_options')) {
@@ -70,8 +70,8 @@ class RT_Admin_Dashboard_V2 {
      * Admin page
      */
     public function admin_page() {
-        $total_employees = wp_count_posts('angestellte_v2')->publish;
-        $total_clients = count(get_users(array('role' => 'kunden_v2')));
+        $total_employees = wp_count_posts('angestellte')->publish;
+        $total_clients = count(get_users(array('role' => 'kunden')));
         
         ?>
         <div class="wrap">
@@ -95,7 +95,7 @@ class RT_Admin_Dashboard_V2 {
                 <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px;">
                     <h3 style="margin-top: 0;"><?php _e('Plugin Version', 'staff-manager'); ?></h3>
                     <p style="font-size: 24px; font-weight: bold; color: #666; margin: 0;">
-                        <?php echo esc_html(RT_EMPLOYEE_V2_VERSION); ?>
+                        <?php echo esc_html(RT_EMPLOYEE_VERSION); ?>
                     </p>
                 </div>
             </div>
@@ -103,10 +103,10 @@ class RT_Admin_Dashboard_V2 {
             <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px;">
                 <h3><?php _e('Schnellaktionen', 'staff-manager'); ?></h3>
                 <p>
-                    <a href="<?php echo admin_url('edit.php?post_type=angestellte_v2'); ?>" class="button button-primary">
+                    <a href="<?php echo admin_url('edit.php?post_type=angestellte'); ?>" class="button button-primary">
                         <?php _e('Alle Mitarbeiter verwalten', 'staff-manager'); ?>
                     </a>
-                    <a href="<?php echo admin_url('users.php?role=kunden_v2'); ?>" class="button">
+                    <a href="<?php echo admin_url('users.php?role=kunden'); ?>" class="button">
                         <?php _e('Kunden verwalten', 'staff-manager'); ?>
                     </a>
                     <a href="<?php echo admin_url('admin.php?page=staff-manager-settings'); ?>" class="button">
@@ -139,7 +139,7 @@ class RT_Admin_Dashboard_V2 {
                     <h3><?php _e('Neuen Kunden erstellen', 'staff-manager'); ?></h3>
                     
                     <form method="post" action="">
-                        <?php wp_nonce_field('create_kunde_v2', 'kunde_nonce'); ?>
+                        <?php wp_nonce_field('create_kunde', 'kunde_nonce'); ?>
                         
                         <table class="form-table">
                             <tr>
@@ -200,7 +200,7 @@ class RT_Admin_Dashboard_V2 {
             return;
         }
         
-        if (!wp_verify_nonce($_POST['kunde_nonce'], 'create_kunde_v2')) {
+        if (!wp_verify_nonce($_POST['kunde_nonce'], 'create_kunde')) {
             wp_die(__('Sicherheitsfehler.', 'staff-manager'));
         }
         
@@ -242,9 +242,9 @@ class RT_Admin_Dashboard_V2 {
             wp_die(__('Fehler beim Erstellen des Benutzerkontos: ', 'staff-manager') . $user_id->get_error_message());
         }
         
-        // Set user role to kunden_v2
+        // Set user role to kunden
         $user = new WP_User($user_id);
-        $user->set_role('kunden_v2');
+        $user->set_role('kunden');
         
         // Set user meta
         update_user_meta($user_id, 'company_name', $company_name);
@@ -292,7 +292,7 @@ class RT_Admin_Dashboard_V2 {
      * Display existing kunden
      */
     private function display_existing_kunden() {
-        $kunden = get_users(array('role' => 'kunden_v2'));
+        $kunden = get_users(array('role' => 'kunden'));
         
         if (empty($kunden)) {
             echo '<p>' . __('Noch keine Kunden erstellt.', 'staff-manager') . '</p>';
@@ -332,7 +332,7 @@ class RT_Admin_Dashboard_V2 {
      */
     private function get_employee_count_for_kunde($user_id) {
         $args = array(
-            'post_type' => 'angestellte_v2',
+            'post_type' => 'angestellte',
             'post_status' => 'publish',
             'posts_per_page' => -1,
             'meta_query' => array(
@@ -351,14 +351,14 @@ class RT_Admin_Dashboard_V2 {
      * Register settings
      */
     public function register_settings() {
-        register_setting('rt_employee_v2_settings', 'rt_employee_v2_buchhaltung_email');
-        register_setting('rt_employee_v2_settings', 'rt_employee_v2_pdf_template_header');
-        register_setting('rt_employee_v2_settings', 'rt_employee_v2_pdf_template_footer');
-        register_setting('rt_employee_v2_settings', 'rt_employee_v2_email_subject_template');
-        register_setting('rt_employee_v2_settings', 'rt_employee_v2_email_body_template');
-        register_setting('rt_employee_v2_settings', 'rt_employee_v2_email_sender_name');
-        register_setting('rt_employee_v2_settings', 'rt_employee_v2_email_sender_email');
-        register_setting('rt_employee_v2_settings', 'rt_employee_v2_pdf_logo');
+        register_setting('staff_manager_settings', 'staff_manager_buchhaltung_email');
+        register_setting('staff_manager_settings', 'staff_manager_pdf_template_header');
+        register_setting('staff_manager_settings', 'staff_manager_pdf_template_footer');
+        register_setting('staff_manager_settings', 'staff_manager_email_subject_template');
+        register_setting('staff_manager_settings', 'staff_manager_email_body_template');
+        register_setting('staff_manager_settings', 'staff_manager_email_sender_name');
+        register_setting('staff_manager_settings', 'staff_manager_email_sender_email');
+        register_setting('staff_manager_settings', 'staff_manager_pdf_logo');
     }
     
     /**
@@ -366,32 +366,32 @@ class RT_Admin_Dashboard_V2 {
      */
     public function settings_page() {
         if (isset($_POST['submit'])) {
-            update_option('rt_employee_v2_buchhaltung_email', sanitize_email($_POST['buchhaltung_email']));
-            update_option('rt_employee_v2_pdf_template_header', sanitize_textarea_field($_POST['pdf_template_header']));
-            update_option('rt_employee_v2_pdf_template_footer', sanitize_textarea_field($_POST['pdf_template_footer']));
-            update_option('rt_employee_v2_email_subject_template', sanitize_text_field($_POST['email_subject_template']));
-            update_option('rt_employee_v2_email_body_template', wp_kses_post($_POST['email_body_template']));
-            update_option('rt_employee_v2_email_sender_name', sanitize_text_field($_POST['email_sender_name']));
-            update_option('rt_employee_v2_email_sender_email', sanitize_email($_POST['email_sender_email']));
-            update_option('rt_employee_v2_pdf_logo', intval($_POST['pdf_logo']));
+            update_option('staff_manager_buchhaltung_email', sanitize_email($_POST['buchhaltung_email']));
+            update_option('staff_manager_pdf_template_header', sanitize_textarea_field($_POST['pdf_template_header']));
+            update_option('staff_manager_pdf_template_footer', sanitize_textarea_field($_POST['pdf_template_footer']));
+            update_option('staff_manager_email_subject_template', sanitize_text_field($_POST['email_subject_template']));
+            update_option('staff_manager_email_body_template', wp_kses_post($_POST['email_body_template']));
+            update_option('staff_manager_email_sender_name', sanitize_text_field($_POST['email_sender_name']));
+            update_option('staff_manager_email_sender_email', sanitize_email($_POST['email_sender_email']));
+            update_option('staff_manager_pdf_logo', intval($_POST['pdf_logo']));
             echo '<div class="notice notice-success"><p>' . __('Einstellungen gespeichert!', 'staff-manager') . '</p></div>';
         }
 
-        $buchhaltung_email = get_option('rt_employee_v2_buchhaltung_email', '');
-        $pdf_header = get_option('rt_employee_v2_pdf_template_header', '');
-        $pdf_footer = get_option('rt_employee_v2_pdf_template_footer', '');
-        $email_subject = get_option('rt_employee_v2_email_subject_template', 'Mitarbeiterdaten: {FIRSTNAME} {LASTNAME} - {KUNDE}');
-        $email_body = get_option('rt_employee_v2_email_body_template', '');
-        $email_sender_name = get_option('rt_employee_v2_email_sender_name', '');
-        $email_sender_email = get_option('rt_employee_v2_email_sender_email', '');
-        $pdf_logo_id = get_option('rt_employee_v2_pdf_logo', 0);
+        $buchhaltung_email = get_option('staff_manager_buchhaltung_email', '');
+        $pdf_header = get_option('staff_manager_pdf_template_header', '');
+        $pdf_footer = get_option('staff_manager_pdf_template_footer', '');
+        $email_subject = get_option('staff_manager_email_subject_template', 'Mitarbeiterdaten: {FIRSTNAME} {LASTNAME} - {KUNDE}');
+        $email_body = get_option('staff_manager_email_body_template', '');
+        $email_sender_name = get_option('staff_manager_email_sender_name', '');
+        $email_sender_email = get_option('staff_manager_email_sender_email', '');
+        $pdf_logo_id = get_option('staff_manager_pdf_logo', 0);
         $pdf_logo_url = $pdf_logo_id ? wp_get_attachment_image_url($pdf_logo_id, 'full') : '';
         ?>
         <div class="wrap">
             <h1><?php _e('Staff Manager - Einstellungen', 'staff-manager'); ?></h1>
             
             <form method="post" action="">
-                <?php wp_nonce_field('rt_employee_v2_settings', 'rt_employee_v2_nonce'); ?>
+                <?php wp_nonce_field('staff_manager_settings', 'staff_manager_nonce'); ?>
                 
                 <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 20px;">
                     <h2><?php _e('E-Mail Konfiguration', 'staff-manager'); ?></h2>
@@ -435,7 +435,7 @@ class RT_Admin_Dashboard_V2 {
                     
                     <?php
                     // Get placeholder list from PDF generator
-                    $pdf_generator = new RT_PDF_Generator_V2();
+                    $pdf_generator = new RT_PDF_Generator();
                     $placeholders_list = $pdf_generator->get_email_placeholders_list();
                     ?>
                     
@@ -566,7 +566,7 @@ class RT_Admin_Dashboard_V2 {
                 <table class="widefat">
                     <tr>
                         <td><strong><?php _e('Plugin Version', 'staff-manager'); ?></strong></td>
-                        <td><?php echo esc_html(RT_EMPLOYEE_V2_VERSION); ?></td>
+                        <td><?php echo esc_html(RT_EMPLOYEE_VERSION); ?></td>
                     </tr>
                     <tr>
                         <td><strong><?php _e('WordPress Version', 'staff-manager'); ?></strong></td>

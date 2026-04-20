@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 /**
  * Handles PDF creation and email sending for employee data
  */
-class RT_PDF_Generator_V2 {
+class RT_PDF_Generator {
     
     public function __construct() {
         add_action('wp_ajax_generate_employee_pdf', array($this, 'ajax_generate_employee_pdf'));
@@ -19,7 +19,7 @@ class RT_PDF_Generator_V2 {
      * Handle AJAX request to generate PDF
      */
     public function ajax_generate_employee_pdf() {
-        if (!wp_verify_nonce($_POST['nonce'], 'generate_pdf_v2')) {
+        if (!wp_verify_nonce($_POST['nonce'], 'generate_pdf')) {
             wp_send_json_error('Security error');
         }
         
@@ -31,7 +31,7 @@ class RT_PDF_Generator_V2 {
         // Make sure user can access this employee
         if (!current_user_can('manage_options')) {
             $user = wp_get_current_user();
-            if (!in_array('kunden_v2', $user->roles)) {
+            if (!in_array('kunden', $user->roles)) {
                 wp_send_json_error('No permission');
             }
             
@@ -56,7 +56,7 @@ class RT_PDF_Generator_V2 {
      * Generate PDF and show it directly in browser (uses unified PDF generation method)
      */
     public function ajax_generate_and_view_employee_pdf() {
-        if (!wp_verify_nonce($_GET['nonce'], 'generate_view_pdf_v2')) {
+        if (!wp_verify_nonce($_GET['nonce'], 'generate_view_pdf')) {
             wp_die('Security error');
         }
         
@@ -68,7 +68,7 @@ class RT_PDF_Generator_V2 {
         // Same permission check as above
         if (!current_user_can('manage_options')) {
             $user = wp_get_current_user();
-            if (!in_array('kunden_v2', $user->roles)) {
+            if (!in_array('kunden', $user->roles)) {
                 wp_die('No permission');
             }
             
@@ -103,7 +103,7 @@ class RT_PDF_Generator_V2 {
      * Handle email sending via AJAX
      */
     public function ajax_email_employee_pdf() {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'email_pdf_v2')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'email_pdf')) {
             wp_send_json_error('Security error');
         }
         
@@ -120,7 +120,7 @@ class RT_PDF_Generator_V2 {
         
         // Either admin or client user
         $is_admin = current_user_can('manage_options');
-        $is_customer = in_array('kunden_v2', $user->roles) || in_array('kunden', $user->roles);
+        $is_customer = in_array('kunden', $user->roles) || in_array('kunden', $user->roles);
         
         if (!$is_admin && !$is_customer) {
             wp_send_json_error('No permission - invalid role');
@@ -171,7 +171,7 @@ class RT_PDF_Generator_V2 {
         
         // Send to bookkeeping
         if ($send_to_bookkeeping) {
-            $bookkeeping_email = get_option('rt_employee_v2_buchhaltung_email', '');
+            $bookkeeping_email = get_option('staff_manager_buchhaltung_email', '');
             if (!empty($bookkeeping_email)) {
                 if ($this->send_pdf_email($bookkeeping_email, $subject, $pdf_url, $employee_id)) {
                     $sent_count++;
@@ -208,8 +208,8 @@ class RT_PDF_Generator_V2 {
         $company_name = isset($employee_data['employer_name']) ? $employee_data['employer_name'] : 'Unbekannt';
 
         // Get template settings
-        $subject_template = get_option('rt_employee_v2_email_subject_template', 'Mitarbeiterdaten: {FIRSTNAME} {LASTNAME} - {KUNDE}');
-        $body_template = get_option('rt_employee_v2_email_body_template', '');
+        $subject_template = get_option('staff_manager_email_subject_template', 'Mitarbeiterdaten: {FIRSTNAME} {LASTNAME} - {KUNDE}');
+        $body_template = get_option('staff_manager_email_body_template', '');
 
         // Use template subject with placeholders (always use template if set)
         $final_subject = $this->replace_email_placeholders($subject_template, $employee_id);
@@ -257,8 +257,8 @@ class RT_PDF_Generator_V2 {
         $headers = array('Content-Type: text/plain; charset=UTF-8');
         
         // Get sender name and email from settings
-        $sender_name = get_option('rt_employee_v2_email_sender_name', '');
-        $sender_email = get_option('rt_employee_v2_email_sender_email', '');
+        $sender_name = get_option('staff_manager_email_sender_name', '');
+        $sender_email = get_option('staff_manager_email_sender_email', '');
         
         // Set From header if sender info is configured
         if (!empty($sender_name) && !empty($sender_email)) {
@@ -295,7 +295,7 @@ class RT_PDF_Generator_V2 {
         $sender_name = $current_user->display_name;
         
         // Get sender name from settings if available
-        $sender_name_setting = get_option('rt_employee_v2_email_sender_name', '');
+        $sender_name_setting = get_option('staff_manager_email_sender_name', '');
         if (!empty($sender_name_setting)) {
             $sender_name = $sender_name_setting;
         }
@@ -380,7 +380,7 @@ class RT_PDF_Generator_V2 {
     private function generate_employee_pdf_content($employee_id) {
         // Get employee post
         $employee = get_post($employee_id);
-        if (!$employee || $employee->post_type !== 'angestellte_v2') {
+        if (!$employee || $employee->post_type !== 'angestellte') {
             return false;
         }
         
@@ -539,9 +539,9 @@ class RT_PDF_Generator_V2 {
         $company = get_bloginfo('name');
         
         // Get settings for better template
-        $company_address = get_option('rt_employee_v2_company_address', '');
-        $pdf_header = get_option('rt_employee_v2_pdf_template_header', '');
-        $pdf_footer = get_option('rt_employee_v2_pdf_template_footer', '');
+        $company_address = get_option('staff_manager_company_address', '');
+        $pdf_header = get_option('staff_manager_pdf_template_header', '');
+        $pdf_footer = get_option('staff_manager_pdf_template_footer', '');
         
         // Create PDF using basic PDF structure
         $pdf = "%PDF-1.4\n";
@@ -800,7 +800,7 @@ class RT_PDF_Generator_V2 {
         }
         
         // Get logo - always use data URI for maximum compatibility with DomPDF
-        $logo_id = get_option('rt_employee_v2_pdf_logo', 0);
+        $logo_id = get_option('staff_manager_pdf_logo', 0);
         $logo_src = '';
         if ($logo_id) {
             $logo_path = get_attached_file($logo_id);
@@ -876,8 +876,8 @@ class RT_PDF_Generator_V2 {
         }
         
         // Get header and footer text from settings
-        $pdf_header_text = get_option('rt_employee_v2_pdf_template_header', '');
-        $pdf_footer_text = get_option('rt_employee_v2_pdf_template_footer', '');
+        $pdf_header_text = get_option('staff_manager_pdf_template_header', '');
+        $pdf_footer_text = get_option('staff_manager_pdf_template_footer', '');
         
         // Default header text if not set
         if (empty($pdf_header_text)) {

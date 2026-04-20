@@ -15,15 +15,15 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('RT_EMPLOYEE_V2_VERSION', '2.2.0');
-define('RT_EMPLOYEE_V2_PLUGIN_FILE', __FILE__);
-define('RT_EMPLOYEE_V2_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('RT_EMPLOYEE_V2_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('RT_EMPLOYEE_VERSION', '2.2.0');
+define('RT_EMPLOYEE_PLUGIN_FILE', __FILE__);
+define('RT_EMPLOYEE_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('RT_EMPLOYEE_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 /**
  * Main plugin class
  */
-class RT_Employee_Manager_V2
+class RT_Employee_Manager
 {
 
     private static $instance = null;
@@ -49,7 +49,7 @@ class RT_Employee_Manager_V2
     public function init()
     {
         // Load Composer autoloader for DomPDF
-        $vendor_autoload = RT_EMPLOYEE_V2_PLUGIN_DIR . 'vendor/autoload.php';
+        $vendor_autoload = RT_EMPLOYEE_PLUGIN_DIR . 'vendor/autoload.php';
         if (file_exists($vendor_autoload)) {
             require_once $vendor_autoload;
         }
@@ -64,18 +64,18 @@ class RT_Employee_Manager_V2
 
         $this->load_classes();
 
-        new RT_Employee_Post_Type_V2();
-        new RT_Employee_Meta_Boxes_V2();
-        new RT_User_Roles_V2();
-        new RT_Kuendigung_Post_Type_V2();
+        new RT_Employee_Post_Type();
+        new RT_Employee_Meta_Boxes();
+        new RT_User_Roles();
+        new RT_Kuendigung_Post_Type();
 
         if (is_admin()) {
-            new RT_Admin_Dashboard_V2();
-            new RT_Kuendigung_Handler_V2();
+            new RT_Admin_Dashboard();
+            new RT_Kuendigung_Handler();
         }
 
         // PDF stuff
-        new RT_PDF_Generator_V2();
+        new RT_PDF_Generator();
 
         // Handle capability updates when plugin version changes
         $this->maybe_update_capabilities();
@@ -98,7 +98,7 @@ class RT_Employee_Manager_V2
         );
 
         foreach ($classes as $class) {
-            $file = RT_EMPLOYEE_V2_PLUGIN_DIR . 'includes/' . $class;
+            $file = RT_EMPLOYEE_PLUGIN_DIR . 'includes/' . $class;
             if (file_exists($file)) {
                 require_once $file;
             }
@@ -120,7 +120,7 @@ class RT_Employee_Manager_V2
         flush_rewrite_rules();
 
         // Track what version we're running
-        add_option('rt_employee_v2_version', RT_EMPLOYEE_V2_VERSION);
+        add_option('staff_manager_version', RT_EMPLOYEE_VERSION);
 
         error_log('Staff Manager: Plugin activated successfully');
     }
@@ -131,10 +131,10 @@ class RT_Employee_Manager_V2
     private function init_post_types_for_activation()
     {
         // Need to load this manually during activation
-        require_once RT_EMPLOYEE_V2_PLUGIN_DIR . 'includes/class-employee-post-type.php';
-        require_once RT_EMPLOYEE_V2_PLUGIN_DIR . 'includes/class-kuendigung-post-type.php';
-        $employee_post_type = new RT_Employee_Post_Type_V2();
-        $kuendigung_post_type = new RT_Kuendigung_Post_Type_V2();
+        require_once RT_EMPLOYEE_PLUGIN_DIR . 'includes/class-employee-post-type.php';
+        require_once RT_EMPLOYEE_PLUGIN_DIR . 'includes/class-kuendigung-post-type.php';
+        $employee_post_type = new RT_Employee_Post_Type();
+        $kuendigung_post_type = new RT_Kuendigung_Post_Type();
         // The capabilities get registered when these classes initialize
     }
 
@@ -153,17 +153,17 @@ class RT_Employee_Manager_V2
     private function create_roles()
     {
         // Clean slate - remove the old role if it's hanging around
-        remove_role('kunden_v2');
+        remove_role('kunden');
 
         // Create the client role with basic permissions
-        add_role('kunden_v2', __('Kunden', 'staff-manager'), array(
+        add_role('kunden', __('Kunden', 'staff-manager'), array(
             'read' => true,
             'edit_posts' => true,
             'delete_posts' => true,
             'upload_files' => true,
         ));
 
-        error_log('Staff Manager: Created kunden_v2 role');
+        error_log('Staff Manager: Created kunden role');
     }
 
     /**
@@ -184,16 +184,16 @@ class RT_Employee_Manager_V2
      */
     private function maybe_update_capabilities()
     {
-        $current_version = get_option('rt_employee_v2_capabilities_version', '0');
+        $current_version = get_option('staff_manager_capabilities_version', '0');
 
-        if ($current_version !== RT_EMPLOYEE_V2_VERSION) {
+        if ($current_version !== RT_EMPLOYEE_VERSION) {
             // Plugin version changed, refresh the capabilities
             $this->init_post_types_for_activation();
-            update_option('rt_employee_v2_capabilities_version', RT_EMPLOYEE_V2_VERSION);
-            error_log('Staff Manager: Updated capabilities for version ' . RT_EMPLOYEE_V2_VERSION);
+            update_option('staff_manager_capabilities_version', RT_EMPLOYEE_VERSION);
+            error_log('Staff Manager: Updated capabilities for version ' . RT_EMPLOYEE_VERSION);
         }
     }
 }
 
 // Initialize plugin
-RT_Employee_Manager_V2::get_instance();
+RT_Employee_Manager::get_instance();
