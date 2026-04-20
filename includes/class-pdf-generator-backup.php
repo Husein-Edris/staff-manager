@@ -20,12 +20,12 @@ class RT_PDF_Generator_V2 {
      */
     public function ajax_generate_employee_pdf() {
         if (!wp_verify_nonce($_POST['nonce'], 'generate_pdf_v2')) {
-            wp_send_json_error(__('Sicherheitsfehler.', 'rt-employee-manager-v2'));
+            wp_send_json_error(__('Sicherheitsfehler.', 'staff-manager'));
         }
         
         $employee_id = intval($_POST['employee_id']);
         if (!$employee_id || !$this->user_can_access_employee($employee_id)) {
-            wp_send_json_error(__('Keine Berechtigung.', 'rt-employee-manager-v2'));
+            wp_send_json_error(__('Keine Berechtigung.', 'staff-manager'));
         }
         
         $pdf_url = $this->generate_employee_pdf($employee_id);
@@ -33,7 +33,7 @@ class RT_PDF_Generator_V2 {
         if ($pdf_url) {
             wp_send_json_success(array('pdf_url' => $pdf_url));
         } else {
-            wp_send_json_error(__('Fehler beim Erstellen der PDF.', 'rt-employee-manager-v2'));
+            wp_send_json_error(__('Fehler beim Erstellen der PDF.', 'staff-manager'));
         }
     }
     
@@ -42,12 +42,12 @@ class RT_PDF_Generator_V2 {
      */
     public function ajax_download_employee_pdf() {
         if (!wp_verify_nonce($_GET['nonce'], 'download_pdf_v2')) {
-            wp_die(__('Sicherheitsfehler.', 'rt-employee-manager-v2'));
+            wp_die(__('Sicherheitsfehler.', 'staff-manager'));
         }
         
         $employee_id = intval($_GET['employee_id']);
         if (!$employee_id || !$this->user_can_access_employee($employee_id)) {
-            wp_die(__('Keine Berechtigung.', 'rt-employee-manager-v2'));
+            wp_die(__('Keine Berechtigung.', 'staff-manager'));
         }
         
         $this->serve_employee_pdf($employee_id);
@@ -58,22 +58,22 @@ class RT_PDF_Generator_V2 {
      */
     public function ajax_email_employee_pdf() {
         if (!wp_verify_nonce($_POST['nonce'], 'email_pdf_v2')) {
-            wp_send_json_error(__('Sicherheitsfehler.', 'rt-employee-manager-v2'));
+            wp_send_json_error(__('Sicherheitsfehler.', 'staff-manager'));
         }
         
         $employee_id = intval($_POST['employee_id']);
         $email_address = sanitize_email($_POST['email']);
         
         if (!$employee_id || !$this->user_can_access_employee($employee_id)) {
-            wp_send_json_error(__('Keine Berechtigung.', 'rt-employee-manager-v2'));
+            wp_send_json_error(__('Keine Berechtigung.', 'staff-manager'));
         }
         
         $result = $this->email_employee_pdf($employee_id, $email_address);
         
         if ($result) {
-            wp_send_json_success(__('PDF wurde erfolgreich versendet.', 'rt-employee-manager-v2'));
+            wp_send_json_success(__('PDF wurde erfolgreich versendet.', 'staff-manager'));
         } else {
-            wp_send_json_error(__('Fehler beim Versenden der E-Mail.', 'rt-employee-manager-v2'));
+            wp_send_json_error(__('Fehler beim Versenden der E-Mail.', 'staff-manager'));
         }
     }
     
@@ -238,7 +238,7 @@ class RT_PDF_Generator_V2 {
         $html .= '
     <div style="margin-top: 40px; text-align: center; font-size: 12px; color: #666;">
         <hr style="border: 1px solid #ddd; margin: 20px 0;">
-        Dokument erstellt durch RT Employee Manager V2<br>
+        Dokument erstellt durch Staff Manager<br>
         ' . home_url() . '
     </div>
 </body>
@@ -289,7 +289,7 @@ class RT_PDF_Generator_V2 {
             // Generate new PDF (prevent infinite loops)
             $pdf_url = $this->generate_employee_pdf($employee_id);
             if (!$pdf_url) {
-                wp_die(__('PDF konnte nicht erstellt werden.', 'rt-employee-manager-v2'));
+                wp_die(__('PDF konnte nicht erstellt werden.', 'staff-manager'));
             }
             $pdf_path = get_post_meta($employee_id, '_latest_pdf_path', true);
         }
@@ -307,7 +307,7 @@ class RT_PDF_Generator_V2 {
             exit;
         }
         
-        wp_die(__('PDF nicht gefunden.', 'rt-employee-manager-v2'));
+        wp_die(__('PDF nicht gefunden.', 'staff-manager'));
     }
     
     /**
@@ -325,9 +325,9 @@ class RT_PDF_Generator_V2 {
             return false;
         }
         
-        $subject = sprintf(__('Mitarbeiterdaten: %s', 'rt-employee-manager-v2'), $employee->post_title);
+        $subject = sprintf(__('Mitarbeiterdaten: %s', 'staff-manager'), $employee->post_title);
         $message = sprintf(
-            __("Anbei finden Sie die Mitarbeiterdaten für %s.\n\nDokument: %s\n\nViele Grüße", 'rt-employee-manager-v2'),
+            __("Anbei finden Sie die Mitarbeiterdaten für %s.\n\nDokument: %s\n\nViele Grüße", 'staff-manager'),
             $employee->post_title,
             $pdf_url
         );

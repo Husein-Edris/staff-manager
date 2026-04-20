@@ -158,14 +158,14 @@ class RT_PDF_Generator_V2 {
         $errors = array();
         
         $employee = get_post($employee_id);
-        $subject = sprintf(__('Mitarbeiterdaten: %s', 'rt-employee-manager-v2'), $employee->post_title);
+        $subject = sprintf(__('Mitarbeiterdaten: %s', 'staff-manager'), $employee->post_title);
         
         // Send to customer
         if ($send_to_customer) {
             if ($this->send_pdf_email($customer_email, $subject, $pdf_url, $employee_id)) {
                 $sent_count++;
             } else {
-                $errors[] = __('Fehler beim Senden an Kunde', 'rt-employee-manager-v2');
+                $errors[] = __('Fehler beim Senden an Kunde', 'staff-manager');
             }
         }
         
@@ -176,10 +176,10 @@ class RT_PDF_Generator_V2 {
                 if ($this->send_pdf_email($bookkeeping_email, $subject, $pdf_url, $employee_id)) {
                     $sent_count++;
                 } else {
-                    $errors[] = __('Fehler beim Senden an Buchhaltung', 'rt-employee-manager-v2');
+                    $errors[] = __('Fehler beim Senden an Buchhaltung', 'staff-manager');
                 }
             } else {
-                $errors[] = __('Buchhaltung E-Mail nicht konfiguriert', 'rt-employee-manager-v2');
+                $errors[] = __('Buchhaltung E-Mail nicht konfiguriert', 'staff-manager');
             }
         }
         
@@ -187,7 +187,7 @@ class RT_PDF_Generator_V2 {
             wp_send_json_success(array(
                 'sent_count' => $sent_count,
                 'errors' => $errors,
-                'message' => sprintf(__('%d E-Mail(s) erfolgreich versendet', 'rt-employee-manager-v2'), $sent_count)
+                'message' => sprintf(__('%d E-Mail(s) erfolgreich versendet', 'staff-manager'), $sent_count)
             ));
         } else {
             wp_send_json_error('Failed to send any emails: ' . implode(', ', $errors));
@@ -214,7 +214,7 @@ class RT_PDF_Generator_V2 {
         // Use template subject with placeholders (always use template if set)
         $final_subject = $this->replace_email_placeholders($subject_template, $employee_id);
         if (empty($final_subject)) {
-            $final_subject = sprintf(__('Mitarbeiterdaten: %s', 'rt-employee-manager-v2'), $employee->post_title);
+            $final_subject = sprintf(__('Mitarbeiterdaten: %s', 'staff-manager'), $employee->post_title);
         }
 
         // Use template body if provided, otherwise use default
@@ -224,7 +224,7 @@ class RT_PDF_Generator_V2 {
         } else {
             // No template - use default message
             $message = sprintf(
-                __("Sehr geehrte Damen und Herren,\n\nanbei finden Sie die Mitarbeiterdaten für %s.\n\nUnternehmen: %s\nE-Mail: %s\nArt der Beschäftigung: %s\n\nMit freundlichen Grüßen\nIhr Team", 'rt-employee-manager-v2'),
+                __("Sehr geehrte Damen und Herren,\n\nanbei finden Sie die Mitarbeiterdaten für %s.\n\nUnternehmen: %s\nE-Mail: %s\nArt der Beschäftigung: %s\n\nMit freundlichen Grüßen\nIhr Team", 'staff-manager'),
                 $employee->post_title,
                 $company_name,
                 isset($employee_data['email']) ? $employee_data['email'] : '',
@@ -272,10 +272,10 @@ class RT_PDF_Generator_V2 {
         if (file_exists($pdf_path)) {
             $attachments[] = $pdf_path;
         } else {
-            error_log('RT Employee Manager V2: PDF file not found for attachment: ' . $pdf_path);
-            error_log('RT Employee Manager V2: Original PDF URL: ' . $pdf_url);
-            error_log('RT Employee Manager V2: Upload basedir: ' . $upload_dir['basedir']);
-            error_log('RT Employee Manager V2: Upload baseurl: ' . $upload_dir['baseurl']);
+            error_log('Staff Manager: PDF file not found for attachment: ' . $pdf_path);
+            error_log('Staff Manager: Original PDF URL: ' . $pdf_url);
+            error_log('Staff Manager: Upload basedir: ' . $upload_dir['basedir']);
+            error_log('Staff Manager: Upload baseurl: ' . $upload_dir['baseurl']);
         }
 
         return wp_mail($to_email, $final_subject, $message, $headers, $attachments);
@@ -447,7 +447,7 @@ class RT_PDF_Generator_V2 {
     private function generate_pdf_from_html($html) {
         // Check if DomPDF is available
         if (!class_exists('\Dompdf\Dompdf')) {
-            error_log('RT Employee Manager V2: DomPDF not found. Please run composer install.');
+            error_log('Staff Manager: DomPDF not found. Please run composer install.');
             return false;
         }
         
@@ -471,8 +471,8 @@ class RT_PDF_Generator_V2 {
             // Return PDF content
             return $dompdf->output();
         } catch (Exception $e) {
-            error_log('RT Employee Manager V2: PDF generation error: ' . $e->getMessage());
-            error_log('RT Employee Manager V2: PDF generation stack trace: ' . $e->getTraceAsString());
+            error_log('Staff Manager: PDF generation error: ' . $e->getMessage());
+            error_log('Staff Manager: PDF generation stack trace: ' . $e->getTraceAsString());
             return false;
         }
     }
@@ -823,7 +823,7 @@ class RT_PDF_Generator_V2 {
             
             // Ensure we have a valid MIME type before proceeding
             if (empty($mime_type)) {
-                error_log('RT Employee Manager V2: Could not determine MIME type for logo ID: ' . $logo_id);
+                error_log('Staff Manager: Could not determine MIME type for logo ID: ' . $logo_id);
             }
             
             // Read image file and create data URI - most reliable method for DomPDF
@@ -852,27 +852,27 @@ class RT_PDF_Generator_V2 {
                         $base64 = base64_encode($image_data);
                         if (!empty($base64)) {
                             $logo_src = 'data:' . trim($mime_type) . ';base64,' . $base64;
-                            error_log('RT Employee Manager V2: Created data URI for logo. MIME: ' . $mime_type . ', Size: ' . strlen($image_data) . ' bytes');
+                            error_log('Staff Manager: Created data URI for logo. MIME: ' . $mime_type . ', Size: ' . strlen($image_data) . ' bytes');
                         } else {
-                            error_log('RT Employee Manager V2: Failed to base64 encode logo image');
+                            error_log('Staff Manager: Failed to base64 encode logo image');
                         }
                     } else {
-                        error_log('RT Employee Manager V2: Logo file signature does not match MIME type: ' . $mime_type);
+                        error_log('Staff Manager: Logo file signature does not match MIME type: ' . $mime_type);
                     }
                 } else {
-                    error_log('RT Employee Manager V2: Failed to read logo file at: ' . ($logo_path ?: 'N/A'));
+                    error_log('Staff Manager: Failed to read logo file at: ' . ($logo_path ?: 'N/A'));
                 }
             } else {
-                error_log('RT Employee Manager V2: Logo file not accessible. Path: ' . ($logo_path ?: 'N/A') . ', Exists: ' . ($logo_path && file_exists($logo_path) ? 'yes' : 'no'));
+                error_log('Staff Manager: Logo file not accessible. Path: ' . ($logo_path ?: 'N/A') . ', Exists: ' . ($logo_path && file_exists($logo_path) ? 'yes' : 'no'));
             }
             
             // Fallback to absolute URL if data URI failed or file not found
             if (empty($logo_src) && $logo_url) {
                 $logo_src = (strpos($logo_url, 'http') === 0) ? $logo_url : site_url($logo_url);
-                error_log('RT Employee Manager V2: Using absolute URL fallback: ' . $logo_src);
+                error_log('Staff Manager: Using absolute URL fallback: ' . $logo_src);
             }
         } else {
-            error_log('RT Employee Manager V2: No logo ID set in options');
+            error_log('Staff Manager: No logo ID set in options');
         }
         
         // Get header and footer text from settings
@@ -886,7 +886,7 @@ class RT_PDF_Generator_V2 {
         
         // Default footer text if not set
         if (empty($pdf_footer_text)) {
-            $pdf_footer_text = 'RT Employee Manager V2 - ' . get_bloginfo('name') . "\n" . home_url();
+            $pdf_footer_text = 'Staff Manager - ' . get_bloginfo('name') . "\n" . home_url();
         }
         
         return "<!DOCTYPE html>

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Plugin Name: RT Employee Manager V2
+ * Plugin Name: Staff Manager
  * Plugin URI: https://edrishusein.com
  * Description: Simplified employee management system for Austrian accounting firms with minimal dependencies
  * Version: 2.2.1
  * Author: Edris Husein
- * Text Domain: rt-employee-manager-v2
+ * Text Domain: staff-manager
  */
 
 // Don't allow direct access to this file
@@ -122,7 +122,7 @@ class RT_Employee_Manager_V2
         // Track what version we're running
         add_option('rt_employee_v2_version', RT_EMPLOYEE_V2_VERSION);
 
-        error_log('RT Employee Manager V2: Plugin activated successfully');
+        error_log('Staff Manager: Plugin activated successfully');
     }
 
     /**
@@ -144,7 +144,7 @@ class RT_Employee_Manager_V2
     public function deactivate()
     {
         flush_rewrite_rules();
-        error_log('RT Employee Manager V2: Plugin deactivated');
+        error_log('Staff Manager: Plugin deactivated');
     }
 
     /**
@@ -156,14 +156,14 @@ class RT_Employee_Manager_V2
         remove_role('kunden_v2');
 
         // Create the client role with basic permissions
-        add_role('kunden_v2', __('Kunden', 'rt-employee-manager-v2'), array(
+        add_role('kunden_v2', __('Kunden', 'staff-manager'), array(
             'read' => true,
             'edit_posts' => true,
             'delete_posts' => true,
             'upload_files' => true,
         ));
 
-        error_log('RT Employee Manager V2: Created kunden_v2 role');
+        error_log('Staff Manager: Created kunden_v2 role');
     }
 
     /**
@@ -172,7 +172,7 @@ class RT_Employee_Manager_V2
     public function load_textdomain()
     {
         load_plugin_textdomain(
-            'rt-employee-manager-v2',
+            'staff-manager',
             false,
             dirname(plugin_basename(__FILE__)) . '/languages/'
         );
@@ -190,7 +190,7 @@ class RT_Employee_Manager_V2
             // Plugin version changed, refresh the capabilities
             $this->init_post_types_for_activation();
             update_option('rt_employee_v2_capabilities_version', RT_EMPLOYEE_V2_VERSION);
-            error_log('RT Employee Manager V2: Updated capabilities for version ' . RT_EMPLOYEE_V2_VERSION);
+            error_log('Staff Manager: Updated capabilities for version ' . RT_EMPLOYEE_V2_VERSION);
         }
     }
 }

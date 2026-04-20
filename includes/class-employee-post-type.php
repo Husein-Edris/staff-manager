@@ -24,17 +24,17 @@ class RT_Employee_Post_Type_V2 {
      */
     public function register_post_type() {
         $labels = array(
-            'name' => __('Mitarbeiter', 'rt-employee-manager-v2'),
-            'singular_name' => __('Mitarbeiter', 'rt-employee-manager-v2'),
-            'menu_name' => __('Mitarbeiter', 'rt-employee-manager-v2'),
-            'add_new' => __('Neuer Mitarbeiter', 'rt-employee-manager-v2'),
-            'add_new_item' => __('Neuen Mitarbeiter hinzufügen', 'rt-employee-manager-v2'),
-            'edit_item' => __('Mitarbeiter bearbeiten', 'rt-employee-manager-v2'),
-            'new_item' => __('Neuer Mitarbeiter', 'rt-employee-manager-v2'),
-            'view_item' => __('Mitarbeiter anzeigen', 'rt-employee-manager-v2'),
-            'search_items' => __('Mitarbeiter suchen', 'rt-employee-manager-v2'),
-            'not_found' => __('Keine Mitarbeiter gefunden', 'rt-employee-manager-v2'),
-            'not_found_in_trash' => __('Keine Mitarbeiter im Papierkorb', 'rt-employee-manager-v2'),
+            'name' => __('Mitarbeiter', 'staff-manager'),
+            'singular_name' => __('Mitarbeiter', 'staff-manager'),
+            'menu_name' => __('Mitarbeiter', 'staff-manager'),
+            'add_new' => __('Neuer Mitarbeiter', 'staff-manager'),
+            'add_new_item' => __('Neuen Mitarbeiter hinzufügen', 'staff-manager'),
+            'edit_item' => __('Mitarbeiter bearbeiten', 'staff-manager'),
+            'new_item' => __('Neuer Mitarbeiter', 'staff-manager'),
+            'view_item' => __('Mitarbeiter anzeigen', 'staff-manager'),
+            'search_items' => __('Mitarbeiter suchen', 'staff-manager'),
+            'not_found' => __('Keine Mitarbeiter gefunden', 'staff-manager'),
+            'not_found_in_trash' => __('Keine Mitarbeiter im Papierkorb', 'staff-manager'),
         );
         
         $args = array(
@@ -146,13 +146,13 @@ class RT_Employee_Post_Type_V2 {
     public function custom_columns($columns) {
         $new_columns = array();
         $new_columns['cb'] = $columns['cb'];
-        $new_columns['title'] = __('Name', 'rt-employee-manager-v2');
-        $new_columns['employee_id'] = __('Mitarbeiter-Nr.', 'rt-employee-manager-v2');
-        $new_columns['email'] = __('E-Mail', 'rt-employee-manager-v2');
-        $new_columns['employment_type'] = __('Art der Beschäftigung', 'rt-employee-manager-v2');
-        $new_columns['status'] = __('Status', 'rt-employee-manager-v2');
-        $new_columns['employer'] = __('Arbeitgeber', 'rt-employee-manager-v2');
-        $new_columns['pdf_actions'] = __('PDF', 'rt-employee-manager-v2');
+        $new_columns['title'] = __('Name', 'staff-manager');
+        $new_columns['employee_id'] = __('Mitarbeiter-Nr.', 'staff-manager');
+        $new_columns['email'] = __('E-Mail', 'staff-manager');
+        $new_columns['employment_type'] = __('Art der Beschäftigung', 'staff-manager');
+        $new_columns['status'] = __('Status', 'staff-manager');
+        $new_columns['employer'] = __('Arbeitgeber', 'staff-manager');
+        $new_columns['pdf_actions'] = __('PDF', 'staff-manager');
         $new_columns['date'] = $columns['date'];
         
         return $new_columns;
@@ -184,10 +184,10 @@ class RT_Employee_Post_Type_V2 {
             case 'status':
                 $status = get_post_meta($post_id, 'status', true) ?: 'active';
                 $statuses = array(
-                    'active' => __('Beschäftigt', 'rt-employee-manager-v2'),
-                    'inactive' => __('Beurlaubt', 'rt-employee-manager-v2'),
-                    'suspended' => __('Suspendiert', 'rt-employee-manager-v2'),
-                    'terminated' => __('Ausgeschieden', 'rt-employee-manager-v2'),
+                    'active' => __('Beschäftigt', 'staff-manager'),
+                    'inactive' => __('Beurlaubt', 'staff-manager'),
+                    'suspended' => __('Suspendiert', 'staff-manager'),
+                    'terminated' => __('Ausgeschieden', 'staff-manager'),
                 );
                 
                 $status_label = isset($statuses[$status]) ? $statuses[$status] : $status;
@@ -202,7 +202,7 @@ class RT_Employee_Post_Type_V2 {
                     if ($user) {
                         echo esc_html($user->display_name);
                     } else {
-                        echo __('Unbekannt', 'rt-employee-manager-v2');
+                        echo __('Unbekannt', 'staff-manager');
                     }
                 } else {
                     echo '—';
@@ -218,7 +218,7 @@ class RT_Employee_Post_Type_V2 {
                 );
                 
                 echo '<a href="' . esc_url($pdf_url) . '" class="button button-small" target="_blank">';
-                echo __('PDF Anzeigen', 'rt-employee-manager-v2');
+                echo __('PDF Anzeigen', 'staff-manager');
                 echo '</a>';
                 break;
         }

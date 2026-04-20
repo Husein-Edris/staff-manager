@@ -22,7 +22,7 @@ class RT_Employee_Meta_Boxes_V2 {
     public function add_meta_boxes() {
         add_meta_box(
             'rt_employee_details_v2',
-            __('Mitarbeiterdaten', 'rt-employee-manager-v2'),
+            __('Mitarbeiterdaten', 'staff-manager'),
             array($this, 'employee_meta_box_callback'),
             'angestellte_v2',
             'normal',
@@ -32,7 +32,7 @@ class RT_Employee_Meta_Boxes_V2 {
         // Add PDF actions meta box
         add_meta_box(
             'rt_employee_pdf_actions_v2',
-            __('PDF Aktionen', 'rt-employee-manager-v2'),
+            __('PDF Aktionen', 'staff-manager'),
             array($this, 'pdf_actions_meta_box_callback'),
             'angestellte_v2',
             'side',
@@ -136,23 +136,23 @@ class RT_Employee_Meta_Boxes_V2 {
     <!-- Basic Info -->
     <div class="form-row">
         <div>
-            <label for="anrede"><?php _e('Anrede', 'rt-employee-manager-v2'); ?></label>
+            <label for="anrede"><?php _e('Anrede', 'staff-manager'); ?></label>
             <select name="anrede" id="anrede">
-                <option value=""><?php _e('Bitte wählen', 'rt-employee-manager-v2'); ?></option>
+                <option value=""><?php _e('Bitte wählen', 'staff-manager'); ?></option>
                 <option value="Herr" <?php selected($data['anrede'], 'Herr'); ?>>
-                    <?php _e('Herr', 'rt-employee-manager-v2'); ?></option>
+                    <?php _e('Herr', 'staff-manager'); ?></option>
                 <option value="Frau" <?php selected($data['anrede'], 'Frau'); ?>>
-                    <?php _e('Frau', 'rt-employee-manager-v2'); ?></option>
+                    <?php _e('Frau', 'staff-manager'); ?></option>
                 <option value="Divers" <?php selected($data['anrede'], 'Divers'); ?>>
-                    <?php _e('Divers', 'rt-employee-manager-v2'); ?></option>
+                    <?php _e('Divers', 'staff-manager'); ?></option>
             </select>
         </div>
         <div>
-            <label for="vorname"><?php _e('Vorname', 'rt-employee-manager-v2'); ?> *</label>
+            <label for="vorname"><?php _e('Vorname', 'staff-manager'); ?> *</label>
             <input type="text" name="vorname" id="vorname" value="<?php echo esc_attr($data['vorname']); ?>" required />
         </div>
         <div>
-            <label for="nachname"><?php _e('Nachname', 'rt-employee-manager-v2'); ?> *</label>
+            <label for="nachname"><?php _e('Nachname', 'staff-manager'); ?> *</label>
             <input type="text" name="nachname" id="nachname" value="<?php echo esc_attr($data['nachname']); ?>"
                 required />
         </div>
@@ -161,18 +161,18 @@ class RT_Employee_Meta_Boxes_V2 {
     <div class="form-row">
         <div>
             <label
-                for="sozialversicherungsnummer"><?php _e('Sozialversicherungsnummer', 'rt-employee-manager-v2'); ?></label>
+                for="sozialversicherungsnummer"><?php _e('Sozialversicherungsnummer', 'staff-manager'); ?></label>
             <input type="text" name="sozialversicherungsnummer" id="sozialversicherungsnummer"
                 value="<?php echo esc_attr($data['sozialversicherungsnummer']); ?>" maxlength="10"
                 placeholder="1234567890" pattern="[0-9]{10}" inputmode="numeric" required />
         </div>
         <div>
-            <label for="geburtsdatum"><?php _e('Geburtsdatum', 'rt-employee-manager-v2'); ?></label>
+            <label for="geburtsdatum"><?php _e('Geburtsdatum', 'staff-manager'); ?></label>
             <input type="date" name="geburtsdatum" id="geburtsdatum"
                 value="<?php echo esc_attr($data['geburtsdatum']); ?>" />
         </div>
         <div>
-            <label for="staatsangehoerigkeit"><?php _e('Staatsangehörigkeit', 'rt-employee-manager-v2'); ?></label>
+            <label for="staatsangehoerigkeit"><?php _e('Staatsangehörigkeit', 'staff-manager'); ?></label>
             <input type="text" name="staatsangehoerigkeit" id="staatsangehoerigkeit"
                 value="<?php echo esc_attr($data['staatsangehoerigkeit']); ?>" />
         </div>
@@ -180,21 +180,21 @@ class RT_Employee_Meta_Boxes_V2 {
 
     <div class="form-row">
         <div>
-            <label for="email"><?php _e('E-Mail-Adresse', 'rt-employee-manager-v2'); ?></label>
+            <label for="email"><?php _e('E-Mail-Adresse', 'staff-manager'); ?></label>
             <input type="email" name="email" id="email" value="<?php echo esc_attr($data['email']); ?>" />
         </div>
         <div>
-            <label for="personenstand"><?php _e('Personenstand', 'rt-employee-manager-v2'); ?></label>
+            <label for="personenstand"><?php _e('Personenstand', 'staff-manager'); ?></label>
             <select name="personenstand" id="personenstand">
-                <option value=""><?php _e('Bitte wählen', 'rt-employee-manager-v2'); ?></option>
+                <option value=""><?php _e('Bitte wählen', 'staff-manager'); ?></option>
                 <option value="Ledig" <?php selected($data['personenstand'], 'Ledig'); ?>>
-                    <?php _e('Ledig', 'rt-employee-manager-v2'); ?></option>
+                    <?php _e('Ledig', 'staff-manager'); ?></option>
                 <option value="Verheiratet" <?php selected($data['personenstand'], 'Verheiratet'); ?>>
-                    <?php _e('Verheiratet', 'rt-employee-manager-v2'); ?></option>
+                    <?php _e('Verheiratet', 'staff-manager'); ?></option>
                 <option value="Geschieden" <?php selected($data['personenstand'], 'Geschieden'); ?>>
-                    <?php _e('Geschieden', 'rt-employee-manager-v2'); ?></option>
+                    <?php _e('Geschieden', 'staff-manager'); ?></option>
                 <option value="Verwitwet" <?php selected($data['personenstand'], 'Verwitwet'); ?>>
-                    <?php _e('Verwitwet', 'rt-employee-manager-v2'); ?></option>
+                    <?php _e('Verwitwet', 'staff-manager'); ?></option>
             </select>
         </div>
         <div></div>
@@ -202,22 +202,22 @@ class RT_Employee_Meta_Boxes_V2 {
 
     <!-- Address Section -->
     <div class="form-section">
-        <h4><?php _e('Adresse', 'rt-employee-manager-v2'); ?></h4>
+        <h4><?php _e('Adresse', 'staff-manager'); ?></h4>
         <div class="form-row">
             <div class="form-row-full">
-                <label for="adresse_strasse"><?php _e('Straße und Hausnummer', 'rt-employee-manager-v2'); ?></label>
+                <label for="adresse_strasse"><?php _e('Straße und Hausnummer', 'staff-manager'); ?></label>
                 <input type="text" name="adresse_strasse" id="adresse_strasse"
                     value="<?php echo esc_attr($data['adresse_strasse']); ?>" />
             </div>
         </div>
         <div class="form-row">
             <div>
-                <label for="adresse_plz"><?php _e('PLZ', 'rt-employee-manager-v2'); ?></label>
+                <label for="adresse_plz"><?php _e('PLZ', 'staff-manager'); ?></label>
                 <input type="text" name="adresse_plz" id="adresse_plz"
                     value="<?php echo esc_attr($data['adresse_plz']); ?>" />
             </div>
             <div>
-                <label for="adresse_ort"><?php _e('Ort', 'rt-employee-manager-v2'); ?></label>
+                <label for="adresse_ort"><?php _e('Ort', 'staff-manager'); ?></label>
                 <input type="text" name="adresse_ort" id="adresse_ort"
                     value="<?php echo esc_attr($data['adresse_ort']); ?>" />
             </div>
@@ -227,31 +227,31 @@ class RT_Employee_Meta_Boxes_V2 {
 
     <!-- Employment Section -->
     <div class="form-section">
-        <h4><?php _e('Beschäftigungsdaten', 'rt-employee-manager-v2'); ?></h4>
+        <h4><?php _e('Beschäftigungsdaten', 'staff-manager'); ?></h4>
         <div class="form-row">
             <div>
-                <label for="eintrittsdatum"><?php _e('Eintrittsdatum', 'rt-employee-manager-v2'); ?> *</label>
+                <label for="eintrittsdatum"><?php _e('Eintrittsdatum', 'staff-manager'); ?> *</label>
                 <input type="date" name="eintrittsdatum" id="eintrittsdatum"
                     value="<?php echo esc_attr($data['eintrittsdatum']); ?>" required />
             </div>
             <div>
                 <label
-                    for="art_des_dienstverhaltnisses"><?php _e('Art des Dienstverhältnisses', 'rt-employee-manager-v2'); ?>
+                    for="art_des_dienstverhaltnisses"><?php _e('Art des Dienstverhältnisses', 'staff-manager'); ?>
                     *</label>
                 <select name="art_des_dienstverhaltnisses" id="art_des_dienstverhaltnisses" required>
-                    <option value=""><?php _e('Bitte wählen', 'rt-employee-manager-v2'); ?></option>
+                    <option value=""><?php _e('Bitte wählen', 'staff-manager'); ?></option>
                     <option value="Angestellter"
                         <?php selected($data['art_des_dienstverhaltnisses'], 'Angestellter'); ?>>
-                        <?php _e('Angestellter', 'rt-employee-manager-v2'); ?></option>
+                        <?php _e('Angestellter', 'staff-manager'); ?></option>
                     <option value="Arbeiter/in" <?php selected($data['art_des_dienstverhaltnisses'], 'Arbeiter/in'); ?>>
-                        <?php _e('Arbeiter/in', 'rt-employee-manager-v2'); ?></option>
+                        <?php _e('Arbeiter/in', 'staff-manager'); ?></option>
                     <option value="Lehrling" <?php selected($data['art_des_dienstverhaltnisses'], 'Lehrling'); ?>>
-                        <?php _e('Lehrling', 'rt-employee-manager-v2'); ?></option>
+                        <?php _e('Lehrling', 'staff-manager'); ?></option>
                 </select>
             </div>
             <div>
                 <label
-                    for="bezeichnung_der_tatigkeit"><?php _e('Bezeichnung der Tätigkeit', 'rt-employee-manager-v2'); ?></label>
+                    for="bezeichnung_der_tatigkeit"><?php _e('Bezeichnung der Tätigkeit', 'staff-manager'); ?></label>
                 <input type="text" name="bezeichnung_der_tatigkeit" id="bezeichnung_der_tatigkeit"
                     value="<?php echo esc_attr($data['bezeichnung_der_tatigkeit']); ?>" />
             </div>
@@ -260,52 +260,52 @@ class RT_Employee_Meta_Boxes_V2 {
         <div class="form-row">
             <div>
                 <label
-                    for="arbeitszeit_pro_woche"><?php _e('Arbeitszeit pro Woche (Stunden)', 'rt-employee-manager-v2'); ?></label>
+                    for="arbeitszeit_pro_woche"><?php _e('Arbeitszeit pro Woche (Stunden)', 'staff-manager'); ?></label>
                 <input type="number" name="arbeitszeit_pro_woche" id="arbeitszeit_pro_woche"
                     value="<?php echo esc_attr($data['arbeitszeit_pro_woche']); ?>" min="1" max="60" step="0.5" />
             </div>
             <div>
-                <label for="gehaltlohn"><?php _e('Gehalt/Lohn (€)', 'rt-employee-manager-v2'); ?></label>
+                <label for="gehaltlohn"><?php _e('Gehalt/Lohn (€)', 'staff-manager'); ?></label>
                 <input type="number" name="gehaltlohn" id="gehaltlohn"
                     value="<?php echo esc_attr($data['gehaltlohn']); ?>" min="0" step="0.01" />
             </div>
             <div>
-                <label for="status"><?php _e('Beschäftigungsstatus', 'rt-employee-manager-v2'); ?></label>
+                <label for="status"><?php _e('Beschäftigungsstatus', 'staff-manager'); ?></label>
                 <select name="status" id="status">
                     <option value="active" <?php selected($data['status'], 'active'); ?>>
-                        <?php _e('Beschäftigt', 'rt-employee-manager-v2'); ?></option>
+                        <?php _e('Beschäftigt', 'staff-manager'); ?></option>
                     <option value="inactive" <?php selected($data['status'], 'inactive'); ?>>
-                        <?php _e('Beurlaubt', 'rt-employee-manager-v2'); ?></option>
+                        <?php _e('Beurlaubt', 'staff-manager'); ?></option>
                     <option value="suspended" <?php selected($data['status'], 'suspended'); ?>>
-                        <?php _e('Suspendiert', 'rt-employee-manager-v2'); ?></option>
+                        <?php _e('Suspendiert', 'staff-manager'); ?></option>
                     <option value="terminated" <?php selected($data['status'], 'terminated'); ?>>
-                        <?php _e('Ausgeschieden', 'rt-employee-manager-v2'); ?></option>
+                        <?php _e('Ausgeschieden', 'staff-manager'); ?></option>
                 </select>
             </div>
         </div>
 
         <div class="form-row">
             <div>
-                <label><?php _e('Gehalt/Lohn: Brutto/Netto', 'rt-employee-manager-v2'); ?></label>
+                <label><?php _e('Gehalt/Lohn: Brutto/Netto', 'staff-manager'); ?></label>
                 <div class="radio-group">
                     <label><input type="radio" name="type" value="Brutto" <?php checked($data['type'], 'Brutto'); ?> />
-                        <?php _e('Brutto', 'rt-employee-manager-v2'); ?></label>
+                        <?php _e('Brutto', 'staff-manager'); ?></label>
                     <label><input type="radio" name="type" value="Netto" <?php checked($data['type'], 'Netto'); ?> />
-                        <?php _e('Netto', 'rt-employee-manager-v2'); ?></label>
+                        <?php _e('Netto', 'staff-manager'); ?></label>
                 </div>
             </div>
             <div>
-                <label><?php _e('Arbeitstage', 'rt-employee-manager-v2'); ?></label>
+                <label><?php _e('Arbeitstage', 'staff-manager'); ?></label>
                 <fieldset style="margin-top: 5px;">
                     <?php
                             $days = array(
-                                'Mo' => __('Mo', 'rt-employee-manager-v2'),
-                                'Di' => __('Di', 'rt-employee-manager-v2'),
-                                'Mi' => __('Mi', 'rt-employee-manager-v2'),
-                                'Do' => __('Do', 'rt-employee-manager-v2'),
-                                'Fr' => __('Fr', 'rt-employee-manager-v2'),
-                                'Sa' => __('Sa', 'rt-employee-manager-v2'),
-                                'So' => __('So', 'rt-employee-manager-v2')
+                                'Mo' => __('Mo', 'staff-manager'),
+                                'Di' => __('Di', 'staff-manager'),
+                                'Mi' => __('Mi', 'staff-manager'),
+                                'Do' => __('Do', 'staff-manager'),
+                                'Fr' => __('Fr', 'staff-manager'),
+                                'Sa' => __('Sa', 'staff-manager'),
+                                'So' => __('So', 'staff-manager')
                             );
                             foreach ($days as $key => $label): ?>
                     <label style="display: inline-block; margin-right: 15px; margin-bottom: 5px;">
@@ -322,13 +322,13 @@ class RT_Employee_Meta_Boxes_V2 {
 
     <!-- Employer Assignment -->
     <div class="form-section">
-        <h4><?php _e('Zuordnung', 'rt-employee-manager-v2'); ?></h4>
+        <h4><?php _e('Zuordnung', 'staff-manager'); ?></h4>
         <div class="form-row">
             <?php if (current_user_can('manage_options')): ?>
             <div>
-                <label for="employer_id"><?php _e('Arbeitgeber', 'rt-employee-manager-v2'); ?></label>
+                <label for="employer_id"><?php _e('Arbeitgeber', 'staff-manager'); ?></label>
                 <select name="employer_id" id="employer_id">
-                    <option value=""><?php _e('Bitte wählen', 'rt-employee-manager-v2'); ?></option>
+                    <option value=""><?php _e('Bitte wählen', 'staff-manager'); ?></option>
                     <?php
                                 $users = get_users(array('role' => 'kunden_v2'));
                                 foreach ($users as $user): ?>
@@ -342,10 +342,10 @@ class RT_Employee_Meta_Boxes_V2 {
             <?php else: ?>
             <input type="hidden" name="employer_id" value="<?php echo get_current_user_id(); ?>" />
             <div>
-                <label><?php _e('Arbeitgeber', 'rt-employee-manager-v2'); ?></label>
+                <label><?php _e('Arbeitgeber', 'staff-manager'); ?></label>
                 <input type="text" value="<?php echo esc_attr(wp_get_current_user()->display_name); ?>" readonly />
                 <p style="color: #666; font-size: 12px; margin-top: 5px;">
-                    <?php _e('Arbeitgeber kann nicht geändert werden', 'rt-employee-manager-v2'); ?>
+                    <?php _e('Arbeitgeber kann nicht geändert werden', 'staff-manager'); ?>
                 </p>
             </div>
             <?php endif; ?>
@@ -356,7 +356,7 @@ class RT_Employee_Meta_Boxes_V2 {
 
     <!-- Notes -->
     <div class="form-section">
-        <h4><?php _e('Anmerkungen', 'rt-employee-manager-v2'); ?></h4>
+        <h4><?php _e('Anmerkungen', 'staff-manager'); ?></h4>
         <div class="form-row">
             <div class="form-row-full">
                 <textarea name="anmerkungen" id="anmerkungen"
@@ -373,7 +373,7 @@ class RT_Employee_Meta_Boxes_V2 {
      */
     public function pdf_actions_meta_box_callback($post) {
         if ($post->post_status !== 'publish') {
-            echo '<p>' . __('Speichern Sie den Mitarbeiter zuerst, um PDF-Aktionen zu verwenden.', 'rt-employee-manager-v2') . '</p>';
+            echo '<p>' . __('Speichern Sie den Mitarbeiter zuerst, um PDF-Aktionen zu verwenden.', 'staff-manager') . '</p>';
             return;
         }
         
@@ -418,12 +418,12 @@ class RT_Employee_Meta_Boxes_V2 {
     <!-- PDF Status -->
     <?php if ($latest_pdf): ?>
     <div class="pdf-status">
-        <strong><?php _e('PDF Status:', 'rt-employee-manager-v2'); ?></strong><br>
-        <span style="color: green;">✓ <?php _e('PDF verfügbar', 'rt-employee-manager-v2'); ?></span>
+        <strong><?php _e('PDF Status:', 'staff-manager'); ?></strong><br>
+        <span style="color: green;">✓ <?php _e('PDF verfügbar', 'staff-manager'); ?></span>
         <?php if ($last_emailed): ?>
-        <br><small><?php printf(__('Zuletzt versendet: %s', 'rt-employee-manager-v2'), date_i18n(get_option('date_format') . ' H:i', strtotime($last_emailed))); ?></small>
+        <br><small><?php printf(__('Zuletzt versendet: %s', 'staff-manager'), date_i18n(get_option('date_format') . ' H:i', strtotime($last_emailed))); ?></small>
         <?php if ($emailed_to): ?>
-        <br><small><?php printf(__('An: %s', 'rt-employee-manager-v2'), esc_html($emailed_to)); ?></small>
+        <br><small><?php printf(__('An: %s', 'staff-manager'), esc_html($emailed_to)); ?></small>
         <?php endif; ?>
         <?php endif; ?>
     </div>
@@ -432,25 +432,25 @@ class RT_Employee_Meta_Boxes_V2 {
     <!-- PDF Actions -->
     <a href="<?php echo wp_nonce_url(admin_url('admin-ajax.php?action=generate_and_view_employee_pdf&employee_id=' . $post->ID), 'generate_view_pdf_v2', 'nonce'); ?>"
         target="_blank" class="button button-primary" style="width: 100%; text-align: center;">
-        <?php _e('PDF anzeigen', 'rt-employee-manager-v2'); ?>
+        <?php _e('PDF anzeigen', 'staff-manager'); ?>
     </a>
     <small style="display: block; margin-top: 5px; color: #666; text-align: center;">
-        <?php _e('Erzeugt automatisch aktuelle PDF mit allen Daten', 'rt-employee-manager-v2'); ?>
+        <?php _e('Erzeugt automatisch aktuelle PDF mit allen Daten', 'staff-manager'); ?>
     </small>
 
     <!-- Email Form -->
     <div class="email-form" style="margin-top: 20px;">
-        <h4 style="margin-top: 0;"><?php _e('PDF per E-Mail versenden', 'rt-employee-manager-v2'); ?></h4>
+        <h4 style="margin-top: 0;"><?php _e('PDF per E-Mail versenden', 'staff-manager'); ?></h4>
 
         <p style="margin-bottom: 15px;">
             <input type="email" id="pdf-email"
-                placeholder="<?php _e('E-Mail-Adresse eingeben', 'rt-employee-manager-v2'); ?>" style="width: 100%;" />
+                placeholder="<?php _e('E-Mail-Adresse eingeben', 'staff-manager'); ?>" style="width: 100%;" />
         </p>
 
         <div class="email-options" style="margin-bottom: 15px;">
             <p><label style="display: block; margin-bottom: 5px;">
                     <input type="checkbox" id="send-to-kunde" />
-                    <?php _e('An oben eingegebene E-Mail senden', 'rt-employee-manager-v2'); ?>
+                    <?php _e('An oben eingegebene E-Mail senden', 'staff-manager'); ?>
                 </label></p>
 
             <?php 
@@ -459,26 +459,26 @@ class RT_Employee_Meta_Boxes_V2 {
                     ?>
             <p><label style="display: block;">
                     <input type="checkbox" id="send-to-bookkeeping" />
-                    <?php _e('An Buchhaltung senden', 'rt-employee-manager-v2'); ?>
+                    <?php _e('An Buchhaltung senden', 'staff-manager'); ?>
                     <strong>(<?php echo esc_html($buchhaltung_email); ?>)</strong>
                 </label></p>
             <?php else: ?>
             <p style="color: #666; font-style: italic;">
-                <?php _e('Buchhaltung E-Mail nicht konfiguriert.', 'rt-employee-manager-v2'); ?>
+                <?php _e('Buchhaltung E-Mail nicht konfiguriert.', 'staff-manager'); ?>
                 <a
-                    href="<?php echo admin_url('admin.php?page=rt-employee-manager-v2-settings'); ?>"><?php _e('Jetzt einrichten', 'rt-employee-manager-v2'); ?></a>
+                    href="<?php echo admin_url('admin.php?page=staff-manager-settings'); ?>"><?php _e('Jetzt einrichten', 'staff-manager'); ?></a>
             </p>
             <?php endif; ?>
         </div>
 
         <p>
             <button type="button" id="send-pdf-email" class="button button-primary" style="width: 100%;">
-                <?php _e('PDF versenden', 'rt-employee-manager-v2'); ?>
+                <?php _e('PDF versenden', 'staff-manager'); ?>
             </button>
         </p>
 
         <p style="font-size: 12px; color: #666; margin: 10px 0 0 0;">
-            <?php _e('Das PDF wird automatisch als Anhang versendet.', 'rt-employee-manager-v2'); ?>
+            <?php _e('Das PDF wird automatisch als Anhang versendet.', 'staff-manager'); ?>
         </p>
     </div>
 
@@ -684,7 +684,7 @@ class RT_Employee_Meta_Boxes_V2 {
         // Register and enqueue our own script handle with an empty source
         // This ensures wp_localize_script and wp_add_inline_script work properly
         wp_register_script(
-            'rt-employee-manager-v2-admin',
+            'staff-manager-admin',
             false, // No source file, we'll use inline
             array('jquery'),
             RT_EMPLOYEE_V2_VERSION,
@@ -692,7 +692,7 @@ class RT_Employee_Meta_Boxes_V2 {
         );
         
         // Localize script with AJAX URL and nonce
-        wp_localize_script('rt-employee-manager-v2-admin', 'rtEmployeeManagerV2', array(
+        wp_localize_script('staff-manager-admin', 'rtEmployeeManagerV2', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('email_pdf_v2')
         ));
@@ -701,18 +701,18 @@ class RT_Employee_Meta_Boxes_V2 {
         $ajax_url = esc_js(admin_url('admin-ajax.php'));
         $nonce = wp_create_nonce('email_pdf_v2');
         
-        wp_add_inline_script('rt-employee-manager-v2-admin', '
+        wp_add_inline_script('staff-manager-admin', '
             (function($) {
                 "use strict";
                 
-                console.log("RT Employee Manager V2: Script file loaded, waiting for DOM ready...");
+                console.log("Staff Manager: Script file loaded, waiting for DOM ready...");
                 
                 $(document).ready(function() {
-                    console.log("RT Employee Manager V2: DOM ready, initializing...");
+                    console.log("Staff Manager: DOM ready, initializing...");
                     
                     const svnrField = document.getElementById("sozialversicherungsnummer");
                     if (svnrField) {
-                        console.log("RT Employee Manager V2: SVNR field found");
+                        console.log("Staff Manager: SVNR field found");
                         // Only allow numbers, max 10 digits
                         svnrField.addEventListener("input", function(e) {
                             e.target.value = e.target.value.replace(/[^0-9]/g, "").slice(0, 10);
@@ -746,7 +746,7 @@ class RT_Employee_Meta_Boxes_V2 {
                             }
                         });
                     } else {
-                        console.warn("RT Employee Manager V2: SVNR field not found");
+                        console.warn("Staff Manager: SVNR field not found");
                     }
                     
                     // Simple SVNR validation function - only check for 10 digits
@@ -776,13 +776,13 @@ class RT_Employee_Meta_Boxes_V2 {
                     
                     // PDF Email functionality
                     const sendEmailBtn = document.getElementById("send-pdf-email");
-                    console.log("RT Employee Manager V2: Looking for send-pdf-email button...", sendEmailBtn);
+                    console.log("Staff Manager: Looking for send-pdf-email button...", sendEmailBtn);
                     
                     if (sendEmailBtn) {
-                        console.log("RT Employee Manager V2: PDF email button found, attaching listener...");
+                        console.log("Staff Manager: PDF email button found, attaching listener...");
                         
                         sendEmailBtn.addEventListener("click", function(e) {
-                            console.log("RT Employee Manager V2: PDF email button clicked!");
+                            console.log("Staff Manager: PDF email button clicked!");
                             e.preventDefault();
                             e.stopPropagation();
                             
@@ -794,7 +794,7 @@ class RT_Employee_Meta_Boxes_V2 {
                             const shouldSendToCustomer = sendToCustomer ? sendToCustomer.checked : false;
                             const shouldSendToBookkeeping = sendToBookkeeping ? sendToBookkeeping.checked : false;
                             
-                            console.log("RT Employee Manager V2: Email values:", {
+                            console.log("Staff Manager: Email values:", {
                                 customerEmail: customerEmail,
                                 shouldSendToCustomer: shouldSendToCustomer,
                                 shouldSendToBookkeeping: shouldSendToBookkeeping
@@ -842,7 +842,7 @@ class RT_Employee_Meta_Boxes_V2 {
                                 ? rtEmployeeManagerV2.nonce 
                                 : "' . $nonce . '";
                             
-                            console.log("RT Employee Manager V2: Sending AJAX request to:", ajaxUrl);
+                            console.log("Staff Manager: Sending AJAX request to:", ajaxUrl);
                             
                             fetch(ajaxUrl, {
                                 method: "POST",
@@ -857,11 +857,11 @@ class RT_Employee_Meta_Boxes_V2 {
                                 })
                             })
                             .then(response => {
-                                console.log("RT Employee Manager V2: Response status:", response.status);
+                                console.log("Staff Manager: Response status:", response.status);
                                 return response.text();
                             })
                             .then(text => {
-                                console.log("RT Employee Manager V2: Raw response:", text);
+                                console.log("Staff Manager: Raw response:", text);
                                 try {
                                     const data = JSON.parse(text);
                                     if (data.success) {
@@ -874,12 +874,12 @@ class RT_Employee_Meta_Boxes_V2 {
                                         alert("Fehler: " + (data.data || "Unbekannter Fehler"));
                                     }
                                 } catch (e) {
-                                    console.error("RT Employee Manager V2: JSON parse error:", e, "Response:", text);
+                                    console.error("Staff Manager: JSON parse error:", e, "Response:", text);
                                     alert("Server response error: " + text.substring(0, 200));
                                 }
                             })
                             .catch(error => {
-                                console.error("RT Employee Manager V2: Fetch error:", error);
+                                console.error("Staff Manager: Fetch error:", error);
                                 alert("Fehler beim Senden: " + error.message);
                             })
                             .finally(() => {
@@ -889,17 +889,17 @@ class RT_Employee_Meta_Boxes_V2 {
                             });
                         });
                         
-                        console.log("RT Employee Manager V2: ✓ PDF email button event listener attached successfully");
+                        console.log("Staff Manager: ✓ PDF email button event listener attached successfully");
                     } else {
-                        console.warn("RT Employee Manager V2: ✗ send-pdf-email button not found on page");
+                        console.warn("Staff Manager: ✗ send-pdf-email button not found on page");
                     }
                     
-                    console.log("RT Employee Manager V2: ✓ Meta box with SVNR validation and email functionality fully loaded");
+                    console.log("Staff Manager: ✓ Meta box with SVNR validation and email functionality fully loaded");
                 });
             })(jQuery);
         ');
         
         // Enqueue the script (this actually outputs it)
-        wp_enqueue_script('rt-employee-manager-v2-admin');
+        wp_enqueue_script('staff-manager-admin');
     }
 }

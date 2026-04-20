@@ -1,6 +1,6 @@
 {
-    "name": "rt/employee-manager-v2",
-    "description": "Simple employee management for Austrian accounting firms",
+    "name": "rt/staff-manager",
+    "description": "Staff management plugin for Austrian accounting firms",
     "type": "wordpress-plugin",
     "require": {
         "php": ">=7.4",

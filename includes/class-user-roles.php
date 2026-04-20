@@ -44,8 +44,8 @@ class RT_User_Roles_V2 {
             'post.php',
             'profile.php',
             'admin-ajax.php',
-            'rt-employee-manager-v2-admin',
-            'rt-employee-manager-v2-kunden-dashboard',
+            'staff-manager-admin',
+            'staff-manager-kunden-dashboard',
             'rt-employee-dashboard-v2',
             'rt-employee-reports-v2'
         );
@@ -133,11 +133,11 @@ class RT_User_Roles_V2 {
         
         // Add dashboard submenu to the main admin menu for kunden users
         add_submenu_page(
-            'rt-employee-manager-v2-admin',
-            __('Dashboard', 'rt-employee-manager-v2'),
-            __('Dashboard', 'rt-employee-manager-v2'),
+            'staff-manager-admin',
+            __('Dashboard', 'staff-manager'),
+            __('Dashboard', 'staff-manager'),
             'read',
-            'rt-employee-manager-v2-kunden-dashboard',
+            'staff-manager-kunden-dashboard',
             array($this, 'dashboard_page'),
             0  // Position at top
         );
@@ -153,25 +153,25 @@ class RT_User_Roles_V2 {
         
         ?>
 <div class="wrap">
-    <h1><?php _e('Mitarbeiter Dashboard', 'rt-employee-manager-v2'); ?></h1>
+    <h1><?php _e('Mitarbeiter Dashboard', 'staff-manager'); ?></h1>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin: 20px 0;">
         <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px;">
-            <h3 style="margin-top: 0;"><?php _e('Mitarbeiter Gesamt', 'rt-employee-manager-v2'); ?></h3>
+            <h3 style="margin-top: 0;"><?php _e('Mitarbeiter Gesamt', 'staff-manager'); ?></h3>
             <p style="font-size: 24px; font-weight: bold; color: #0073aa; margin: 0;">
                 <?php echo esc_html($employee_count['total']); ?>
             </p>
         </div>
 
         <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px;">
-            <h3 style="margin-top: 0;"><?php _e('Beschäftigt', 'rt-employee-manager-v2'); ?></h3>
+            <h3 style="margin-top: 0;"><?php _e('Beschäftigt', 'staff-manager'); ?></h3>
             <p style="font-size: 24px; font-weight: bold; color: #46b450; margin: 0;">
                 <?php echo esc_html($employee_count['active']); ?>
             </p>
         </div>
 
         <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px;">
-            <h3 style="margin-top: 0;"><?php _e('Inaktiv', 'rt-employee-manager-v2'); ?></h3>
+            <h3 style="margin-top: 0;"><?php _e('Inaktiv', 'staff-manager'); ?></h3>
             <p style="font-size: 24px; font-weight: bold; color: #dc3232; margin: 0;">
                 <?php echo esc_html($employee_count['inactive']); ?>
             </p>
@@ -179,19 +179,19 @@ class RT_User_Roles_V2 {
     </div>
 
     <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px; margin: 20px 0;">
-        <h3><?php _e('Schnellaktionen', 'rt-employee-manager-v2'); ?></h3>
+        <h3><?php _e('Schnellaktionen', 'staff-manager'); ?></h3>
         <p>
             <a href="<?php echo admin_url('post-new.php?post_type=angestellte_v2'); ?>" class="button button-primary">
-                <?php _e('Neuen Mitarbeiter hinzufügen', 'rt-employee-manager-v2'); ?>
+                <?php _e('Neuen Mitarbeiter hinzufügen', 'staff-manager'); ?>
             </a>
             <a href="<?php echo admin_url('edit.php?post_type=angestellte_v2'); ?>" class="button">
-                <?php _e('Alle Mitarbeiter anzeigen', 'rt-employee-manager-v2'); ?>
+                <?php _e('Alle Mitarbeiter anzeigen', 'staff-manager'); ?>
             </a>
         </p>
     </div>
 
     <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px;">
-        <h3><?php _e('Neueste Mitarbeiter', 'rt-employee-manager-v2'); ?></h3>
+        <h3><?php _e('Neueste Mitarbeiter', 'staff-manager'); ?></h3>
         <?php $this->display_recent_employees($user->ID); ?>
     </div>
 </div>
@@ -301,17 +301,17 @@ class RT_User_Roles_V2 {
         $employees = get_posts($args);
         
         if (empty($employees)) {
-            echo '<p>' . __('Noch keine Mitarbeiter angelegt.', 'rt-employee-manager-v2') . '</p>';
+            echo '<p>' . __('Noch keine Mitarbeiter angelegt.', 'staff-manager') . '</p>';
             return;
         }
         
         echo '<table class="widefat fixed striped">';
         echo '<thead><tr>';
-        echo '<th>' . __('Name', 'rt-employee-manager-v2') . '</th>';
-        echo '<th>' . __('E-Mail', 'rt-employee-manager-v2') . '</th>';
-        echo '<th>' . __('Status', 'rt-employee-manager-v2') . '</th>';
-        echo '<th>' . __('Erstellt', 'rt-employee-manager-v2') . '</th>';
-        echo '<th>' . __('Aktionen', 'rt-employee-manager-v2') . '</th>';
+        echo '<th>' . __('Name', 'staff-manager') . '</th>';
+        echo '<th>' . __('E-Mail', 'staff-manager') . '</th>';
+        echo '<th>' . __('Status', 'staff-manager') . '</th>';
+        echo '<th>' . __('Erstellt', 'staff-manager') . '</th>';
+        echo '<th>' . __('Aktionen', 'staff-manager') . '</th>';
         echo '</tr></thead><tbody>';
         
         foreach ($employees as $employee) {
@@ -319,10 +319,10 @@ class RT_User_Roles_V2 {
             $status = get_post_meta($employee->ID, 'status', true) ?: 'active';
             
             $status_labels = array(
-                'active' => __('Beschäftigt', 'rt-employee-manager-v2'),
-                'inactive' => __('Beurlaubt', 'rt-employee-manager-v2'),
-                'suspended' => __('Suspendiert', 'rt-employee-manager-v2'),
-                'terminated' => __('Ausgeschieden', 'rt-employee-manager-v2'),
+                'active' => __('Beschäftigt', 'staff-manager'),
+                'inactive' => __('Beurlaubt', 'staff-manager'),
+                'suspended' => __('Suspendiert', 'staff-manager'),
+                'terminated' => __('Ausgeschieden', 'staff-manager'),
             );
             
             echo '<tr>';
@@ -330,14 +330,14 @@ class RT_User_Roles_V2 {
             echo '<td>' . esc_html($email) . '</td>';
             echo '<td>' . esc_html($status_labels[$status] ?? $status) . '</td>';
             echo '<td>' . esc_html(date_i18n(get_option('date_format'), strtotime($employee->post_date))) . '</td>';
-            echo '<td><a href="' . get_edit_post_link($employee->ID) . '">' . __('Bearbeiten', 'rt-employee-manager-v2') . '</a></td>';
+            echo '<td><a href="' . get_edit_post_link($employee->ID) . '">' . __('Bearbeiten', 'staff-manager') . '</a></td>';
             echo '</tr>';
         }
         
         echo '</tbody></table>';
         
         if (count($employees) >= $limit) {
-            echo '<p><a href="' . admin_url('edit.php?post_type=angestellte_v2') . '">' . __('Alle Mitarbeiter anzeigen →', 'rt-employee-manager-v2') . '</a></p>';
+            echo '<p><a href="' . admin_url('edit.php?post_type=angestellte_v2') . '">' . __('Alle Mitarbeiter anzeigen →', 'staff-manager') . '</a></p>';
         }
     }
 }

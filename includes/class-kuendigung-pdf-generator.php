@@ -439,7 +439,7 @@ class RT_Kuendigung_PDF_Generator_V2 {
      */
     private function save_pdf_to_file($pdf_content, $kuendigung_id, $employee_id) {
         $upload_dir = wp_upload_dir();
-        $kuendigung_dir = $upload_dir['basedir'] . '/rt-employee-manager-v2/kuendigungen';
+        $kuendigung_dir = $upload_dir['basedir'] . '/staff-manager/kuendigungen';
         
         if (!file_exists($kuendigung_dir)) {
             wp_mkdir_p($kuendigung_dir);
@@ -506,7 +506,7 @@ class RT_Kuendigung_PDF_Generator_V2 {
             $employee_name = $employee->post_title;
         }
         
-        $subject = sprintf(__('Kündigung Ihres Dienstverhältnisses - %s', 'rt-employee-manager-v2'), $employee_name);
+        $subject = sprintf(__('Kündigung Ihres Dienstverhältnisses - %s', 'staff-manager'), $employee_name);
         
         // Email body
         $body = "Sehr geehrte/r " . $employee_name . ",\n\n";

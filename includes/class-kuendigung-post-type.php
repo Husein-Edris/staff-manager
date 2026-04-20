@@ -19,17 +19,17 @@ class RT_Kuendigung_Post_Type_V2 {
      */
     public function register_post_type() {
         $labels = array(
-            'name' => __('Kündigungen', 'rt-employee-manager-v2'),
-            'singular_name' => __('Kündigung', 'rt-employee-manager-v2'),
-            'menu_name' => __('Kündigungen', 'rt-employee-manager-v2'),
-            'add_new' => __('Neue Kündigung', 'rt-employee-manager-v2'),
-            'add_new_item' => __('Neue Kündigung erstellen', 'rt-employee-manager-v2'),
-            'edit_item' => __('Kündigung bearbeiten', 'rt-employee-manager-v2'),
-            'new_item' => __('Neue Kündigung', 'rt-employee-manager-v2'),
-            'view_item' => __('Kündigung anzeigen', 'rt-employee-manager-v2'),
-            'search_items' => __('Kündigungen suchen', 'rt-employee-manager-v2'),
-            'not_found' => __('Keine Kündigungen gefunden', 'rt-employee-manager-v2'),
-            'not_found_in_trash' => __('Keine Kündigungen im Papierkorb', 'rt-employee-manager-v2'),
+            'name' => __('Kündigungen', 'staff-manager'),
+            'singular_name' => __('Kündigung', 'staff-manager'),
+            'menu_name' => __('Kündigungen', 'staff-manager'),
+            'add_new' => __('Neue Kündigung', 'staff-manager'),
+            'add_new_item' => __('Neue Kündigung erstellen', 'staff-manager'),
+            'edit_item' => __('Kündigung bearbeiten', 'staff-manager'),
+            'new_item' => __('Neue Kündigung', 'staff-manager'),
+            'view_item' => __('Kündigung anzeigen', 'staff-manager'),
+            'search_items' => __('Kündigungen suchen', 'staff-manager'),
+            'not_found' => __('Keine Kündigungen gefunden', 'staff-manager'),
+            'not_found_in_trash' => __('Keine Kündigungen im Papierkorb', 'staff-manager'),
         );
         
         $args = array(

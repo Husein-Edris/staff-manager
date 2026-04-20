@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>RT Employee Manager V2 – Benutzerhandbuch</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 11pt; color: #222; max-width: 800px; margin: 40px auto; line-height: 1.6; }
+  h1 { font-size: 22pt; color: #1a1a2e; border-bottom: 3px solid #0073aa; padding-bottom: 10px; }
+  h2 { font-size: 16pt; color: #0073aa; margin-top: 40px; border-bottom: 1px solid #cce5f5; padding-bottom: 6px; }
+  h3 { font-size: 13pt; color: #1a1a2e; margin-top: 24px; }
+  h4 { font-size: 11pt; color: #555; margin-top: 16px; margin-bottom: 4px; }
+  p { margin: 8px 0; }
+  ul, ol { margin: 8px 0 8px 24px; }
+  li { margin-bottom: 4px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 10pt; }
+  th { background: #0073aa; color: #fff; padding: 8px 10px; text-align: left; }
+  td { padding: 7px 10px; border: 1px solid #ddd; vertical-align: top; }
+  tr:nth-child(even) td { background: #f5faff; }
+  .note { background: #fff8dc; border-left: 4px solid #f0c040; padding: 10px 14px; margin: 12px 0; border-radius: 3px; }
+  .warning { background: #fff0f0; border-left: 4px solid #dc3232; padding: 10px 14px; margin: 12px 0; border-radius: 3px; }
+  .success { background: #f0fff4; border-left: 4px solid #46b450; padding: 10px 14px; margin: 12px 0; border-radius: 3px; }
+  .step { background: #f4f9ff; border: 1px solid #c5dff5; border-radius: 4px; padding: 12px 16px; margin: 10px 0; }
+  .step-number { display: inline-block; background: #0073aa; color: #fff; border-radius: 50%; width: 22px; height: 22px; text-align: center; line-height: 22px; font-weight: bold; margin-right: 8px; font-size: 10pt; }
+  .path { font-family: monospace; background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 10pt; }
+  .divider { border: none; border-top: 2px solid #e0e0e0; margin: 40px 0; }
+  .toc a { color: #0073aa; text-decoration: none; }
+  .toc li { margin-bottom: 6px; }
+  .required { color: #dc3232; font-weight: bold; }
+  .optional { color: #888; font-style: italic; }
+</style>
+</head>
+<body>
+
+<h1>RT Employee Manager V2<br><span style="font-size:13pt; font-weight:normal; color:#555;">Benutzerhandbuch für Administratoren &amp; Kunden</span></h1>
+
+<p><strong>Plugin Version:</strong> 2.2.1 &nbsp;|&nbsp; <strong>Stand:</strong> Februar 2026</p>
+
+<hr class="divider">
+
+<h2>Inhaltsverzeichnis</h2>
+<ul class="toc">
+  <li><a href="#teil1">Teil 1 – Für den Administrator (Eigentümer)</a>
+    <ul>
+      <li><a href="#ersteinrichtung">1.1 Ersteinrichtung</a></li>
+      <li><a href="#kunden-erstellen">1.2 Kunden (Firmen) anlegen</a></li>
+      <li><a href="#plugin-testen">1.3 Das Plugin testen – Schritt für Schritt</a></li>
+      <li><a href="#zugangskontrolle">1.4 Zugangskontrolle prüfen</a></li>
+    </ul>
+  </li>
+  <li><a href="#teil2">Teil 2 – Für Kunden (Firmen)</a>
+    <ul>
+      <li><a href="#kunden-login">2.1 Anmelden</a></li>
+      <li><a href="#kunden-dashboard">2.2 Das Kunden-Dashboard</a></li>
+      <li><a href="#mitarbeiter-anlegen">2.3 Neuen Mitarbeiter anlegen</a></li>
+      <li><a href="#felder-erklaerung">2.4 Alle Felder erklärt</a></li>
+      <li><a href="#pdf-versenden">2.5 PDF anzeigen &amp; versenden</a></li>
+      <li><a href="#kuendigung">2.6 Kündigung erstellen</a></li>
+    </ul>
+  </li>
+  <li><a href="#teil3">Teil 3 – Fehlersuche</a></li>
+</ul>
+
+<hr class="divider">
+
+<!-- =========================================== -->
+<!--  TEIL 1 – ADMINISTRATOR                     -->
+<!-- =========================================== -->
+
+<h1 id="teil1">Teil 1: Für den Administrator (Eigentümer)</h1>
+
+<h2 id="ersteinrichtung">1.1 Ersteinrichtung</h2>
+
+<p>Diese Schritte müssen einmalig nach der Plugin-Aktivierung durchgeführt werden.</p>
+
+<h3>Buchhaltungs-E-Mail einstellen</h3>
+
+<div class="step">
+  <p><span class="step-number">1</span> Gehen Sie zu <span class="path">Employee Manager V2 → Einstellungen</span></p>
+  <p><span class="step-number">2</span> Tragen Sie die <strong>Buchhaltung E-Mail-Adresse</strong> ein (z. B. <em>buchhaltung@ihrefirma.at</em>). An diese Adresse werden alle Mitarbeiter-PDFs weitergeleitet.</p>
+  <p><span class="step-number">3</span> Optional: Tragen Sie <strong>Absender Name</strong> und <strong>Absender E-Mail</strong> ein (z. B. „RT Buchhaltung" / info@rt-buchhaltung.at).</p>
+  <p><span class="step-number">4</span> Optional: Laden Sie ein <strong>Logo</strong> hoch, das oben links in allen PDFs erscheint.</p>
+  <p><span class="step-number">5</span> Klicken Sie auf <strong>Einstellungen speichern</strong>.</p>
+</div>
+
+<div class="success">
+  <strong>Prüfen:</strong> Nach dem Speichern erscheint oben die grüne Meldung „Einstellungen gespeichert!".
+</div>
+
+<h3>E-Mail-Template anpassen (optional)</h3>
+
+<p>Im Bereich <strong>E-Mail Template</strong> können Betreff und Text der E-Mails angepasst werden. Verfügbare Platzhalter werden direkt auf der Seite angezeigt (z. B. <span class="path">{FIRSTNAME}</span>, <span class="path">{LASTNAME}</span>, <span class="path">{KUNDE}</span>).</p>
+
+<h3>PDF-Header &amp; Footer</h3>
+
+<p>Unter <strong>PDF Template Anpassung</strong> kann Text eingetragen werden, der oben rechts (Header) und unten (Footer) in jedem generierten PDF erscheint.</p>
+
+<hr class="divider">
+
+<h2 id="kunden-erstellen">1.2 Kunden (Firmen) anlegen</h2>
+
+<p>Kunden sind die Firmenkunden Ihrer Buchhaltung. Jeder Kunde bekommt einen eigenen Login und kann nur seine eigenen Mitarbeiter sehen und bearbeiten.</p>
+
+<div class="step">
+  <p><span class="step-number">1</span> Gehen Sie zu <span class="path">Employee Manager V2 → Kunden</span></p>
+  <p><span class="step-number">2</span> Füllen Sie das Formular <strong>Neuen Kunden erstellen</strong> aus:</p>
+</div>
+
+<table>
+  <tr>
+    <th>Feld</th>
+    <th>Beschreibung</th>
+    <th>Pflichtfeld?</th>
+  </tr>
+  <tr>
+    <td>Firmenname</td>
+    <td>Name des Unternehmens (erscheint im PDF)</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Ansprechpartner</td>
+    <td>Name der Kontaktperson</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>E-Mail</td>
+    <td>Login-E-Mail des Kunden &amp; Kontakt-E-Mail</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Telefon</td>
+    <td>Telefonnummer</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>UID-Nummer</td>
+    <td>Umsatzsteuer-Identifikationsnummer</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Adresse</td>
+    <td>Straße und Hausnummer</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>PLZ</td>
+    <td>Postleitzahl</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Ort</td>
+    <td>Stadt/Gemeinde</td>
+    <td class="optional">Nein</td>
+  </tr>
+</table>
+
+<div class="step">
+  <p><span class="step-number">3</span> Klicken Sie auf <strong>Kunde erstellen</strong>.</p>
+  <p><span class="step-number">4</span> Das System erstellt automatisch ein WordPress-Benutzerkonto mit der Rolle <em>Kunden</em> und versendet eine E-Mail mit einem <strong>Passwort-Reset-Link</strong>.</p>
+</div>
+
+<div class="success">
+  <strong>Ergebnis:</strong> Der Kunde erscheint in der rechten Tabelle „Vorhandene Kunden" und kann sich sofort nach dem Setzen seines Passworts anmelden.
+</div>
+
+<div class="note">
+  <strong>Hinweis:</strong> Das Passwort wird nie im Klartext verschickt. Der Kunde erhält nur einen sicheren Link, um sein eigenes Passwort zu setzen.
+</div>
+
+<hr class="divider">
+
+<h2 id="plugin-testen">1.3 Das Plugin testen – Schritt für Schritt</h2>
+
+<h3>Schritt A: Testkunden anlegen</h3>
+
+<div class="step">
+  <p><span class="step-number">1</span> Gehen Sie zu <span class="path">Employee Manager V2 → Kunden</span></p>
+  <p><span class="step-number">2</span> Legen Sie einen Testkunden an, z. B.:</p>
+  <ul>
+    <li><strong>Firmenname:</strong> Testfirma GmbH</li>
+    <li><strong>E-Mail:</strong> test@testfirma.at</li>
+    <li><strong>Adresse:</strong> Teststraße 1</li>
+    <li><strong>PLZ:</strong> 1010</li>
+    <li><strong>Ort:</strong> Wien</li>
+  </ul>
+  <p><span class="step-number">3</span> Klicken Sie auf <strong>Kunde erstellen</strong>. Der Kunde erscheint nun in der Liste.</p>
+</div>
+
+<h3>Schritt B: Testmitarbeiter als Administrator anlegen</h3>
+
+<div class="step">
+  <p><span class="step-number">1</span> Gehen Sie zu <span class="path">Mitarbeiter → Neu hinzufügen</span></p>
+  <p><span class="step-number">2</span> Füllen Sie mindestens die Pflichtfelder aus (Vorname, Nachname, Sozialversicherungsnummer, Eintrittsdatum, Art des Dienstverhältnisses).</p>
+  <p><span class="step-number">3</span> Im Abschnitt <strong>Zuordnung</strong> wählen Sie den soeben erstellten Testkunden aus.</p>
+  <p><span class="step-number">4</span> Klicken Sie auf <strong>Veröffentlichen</strong>.</p>
+</div>
+
+<div class="success">
+  <strong>Ergebnis:</strong> Der Mitarbeiter erscheint in der Liste unter <span class="path">Mitarbeiter</span>. Der Titel des Eintrags wird automatisch auf den vollständigen Namen gesetzt.
+</div>
+
+<h3>Schritt C: PDF generieren und prüfen</h3>
+
+<div class="step">
+  <p><span class="step-number">1</span> Öffnen Sie den gerade erstellten Mitarbeiter zur Bearbeitung.</p>
+  <p><span class="step-number">2</span> Auf der rechten Seite befindet sich die Box <strong>PDF Aktionen</strong>.</p>
+  <p><span class="step-number">3</span> Klicken Sie auf <strong>PDF anzeigen</strong>. Das PDF öffnet sich in einem neuen Tab.</p>
+  <p><span class="step-number">4</span> Prüfen Sie, ob:</p>
+  <ul>
+    <li>Logo (falls hochgeladen) oben links erscheint</li>
+    <li>Alle eingetragenen Daten korrekt angezeigt werden</li>
+    <li>Header und Footer-Text erscheinen (falls eingetragen)</li>
+  </ul>
+</div>
+
+<h3>Schritt D: PDF per E-Mail versenden</h3>
+
+<div class="step">
+  <p><span class="step-number">1</span> Bleiben Sie auf der Mitarbeiter-Bearbeitungsseite (rechte Box <strong>PDF Aktionen</strong>).</p>
+  <p><span class="step-number">2</span> Tragen Sie im Feld <em>E-Mail-Adresse eingeben</em> eine Test-E-Mail-Adresse ein.</p>
+  <p><span class="step-number">3</span> Aktivieren Sie die Checkbox <strong>An oben eingegebene E-Mail senden</strong>.</p>
+  <p><span class="step-number">4</span> Optional: Aktivieren Sie <strong>An Buchhaltung senden</strong> (sendet an die in den Einstellungen hinterlegte E-Mail).</p>
+  <p><span class="step-number">5</span> Klicken Sie auf <strong>PDF versenden</strong>.</p>
+</div>
+
+<div class="success">
+  <strong>Ergebnis:</strong> Ein Popup bestätigt den erfolgreichen Versand. Im Status-Bereich wird angezeigt, wann und an wen zuletzt gesendet wurde.
+</div>
+
+<h3>Schritt E: Kündigung testen</h3>
+
+<div class="step">
+  <p><span class="step-number">1</span> Öffnen Sie einen bestehenden Mitarbeiter (Status: Beschäftigt).</p>
+  <p><span class="step-number">2</span> Auf der rechten Seite finden Sie die Box <strong>Kündigung</strong>.</p>
+  <p><span class="step-number">3</span> Klicken Sie auf <strong>Kündigung erstellen</strong>, um das Formular aufzuklappen.</p>
+  <p><span class="step-number">4</span> Füllen Sie alle Pflichtfelder aus:</p>
+  <ul>
+    <li><strong>Kündigungsart:</strong> Ordentliche oder Fristlose Kündigung</li>
+    <li><strong>Kündigungsdatum:</strong> Datum der Kündigung</li>
+    <li><strong>Beendigungsdatum:</strong> Letzter Arbeitstag (muss nach Kündigungsdatum liegen)</li>
+    <li><strong>Grund der Kündigung:</strong> Begründungstext</li>
+  </ul>
+  <p><span class="step-number">5</span> Optional: E-Mail-Adresse für automatischen PDF-Versand nach dem Speichern eintragen.</p>
+  <p><span class="step-number">6</span> Klicken Sie auf <strong>Aktualisieren</strong> (oben rechts).</p>
+</div>
+
+<div class="success">
+  <strong>Ergebnis:</strong> Eine grüne Erfolgsmeldung erscheint. Der Mitarbeiterstatus wechselt automatisch auf „Ausgeschieden". Die Kündigung wird in der rechten Box angezeigt und das Kündigung-PDF kann von dort versendet werden.
+</div>
+
+<div class="warning">
+  <strong>Wichtig:</strong> Eine Kündigung kann nicht rückgängig gemacht werden. Ein Mitarbeiter mit Status „Ausgeschieden" kann keine neue Kündigung mehr erhalten.
+</div>
+
+<hr class="divider">
+
+<h2 id="zugangskontrolle">1.4 Zugangskontrolle prüfen</h2>
+
+<p>Um sicherzustellen, dass Kunden nur ihre eigenen Mitarbeiter sehen, testen Sie Folgendes:</p>
+
+<div class="step">
+  <p><span class="step-number">1</span> Melden Sie sich vom Admin-Account ab.</p>
+  <p><span class="step-number">2</span> Loggen Sie sich mit dem Testkunden-Account ein (E-Mail aus Schritt A, nach Passwort-Reset).</p>
+  <p><span class="step-number">3</span> Prüfen Sie, dass der Kunde:</p>
+  <ul>
+    <li>Nur seine eigenen Mitarbeiter sieht (nicht die anderer Kunden)</li>
+    <li>Keine WordPress-Dashboard-Navigation (Seiten, Beiträge, etc.) sieht</li>
+    <li>Nur auf <span class="path">Mitarbeiter</span> und das <span class="path">Dashboard</span> zugreifen kann</li>
+    <li>Neue Mitarbeiter hinzufügen kann</li>
+  </ul>
+</div>
+
+<div class="success">
+  Die Zugangskontrolle ist korrekt, wenn der Kunde beim Versuch auf andere WordPress-Bereiche zuzugreifen automatisch zur Mitarbeiterliste weitergeleitet wird.
+</div>
+
+<hr class="divider">
+
+<!-- =========================================== -->
+<!--  TEIL 2 – KUNDEN                            -->
+<!-- =========================================== -->
+
+<h1 id="teil2">Teil 2: Für Kunden (Firmen)</h1>
+
+<p>Dieser Abschnitt richtet sich an die Firmenkunden der Buchhaltung. Er erklärt, wie Sie Ihre Mitarbeiter verwalten.</p>
+
+<h2 id="kunden-login">2.1 Anmelden</h2>
+
+<div class="step">
+  <p><span class="step-number">1</span> Sie haben eine Willkommens-E-Mail mit einem <strong>Passwort-Reset-Link</strong> erhalten.</p>
+  <p><span class="step-number">2</span> Klicken Sie auf den Link und vergeben Sie ein sicheres Passwort.</p>
+  <p><span class="step-number">3</span> Danach können Sie sich jederzeit unter folgender Adresse anmelden: <span class="path">[Website-Adresse]/wp-admin/</span></p>
+  <p><span class="step-number">4</span> Verwenden Sie Ihre <strong>E-Mail-Adresse</strong> als Benutzername.</p>
+</div>
+
+<div class="note">
+  <strong>Hinweis:</strong> Sie werden nach der Anmeldung direkt zu Ihrer Mitarbeiterverwaltung weitergeleitet. Sie sehen kein normales WordPress-Dashboard.
+</div>
+
+<hr class="divider">
+
+<h2 id="kunden-dashboard">2.2 Das Kunden-Dashboard</h2>
+
+<p>Nach der Anmeldung sehen Sie Ihr <strong>Mitarbeiter Dashboard</strong> mit drei Übersichtskacheln:</p>
+
+<table>
+  <tr>
+    <th>Kachel</th>
+    <th>Was sie zeigt</th>
+  </tr>
+  <tr>
+    <td><strong>Mitarbeiter Gesamt</strong></td>
+    <td>Gesamtanzahl aller Ihrer Mitarbeiter</td>
+  </tr>
+  <tr>
+    <td><strong>Beschäftigt</strong></td>
+    <td>Anzahl aktiv beschäftigter Mitarbeiter</td>
+  </tr>
+  <tr>
+    <td><strong>Inaktiv</strong></td>
+    <td>Anzahl beurlaubter/suspendierter Mitarbeiter</td>
+  </tr>
+</table>
+
+<p>Im Bereich <strong>Schnellaktionen</strong> finden Sie:</p>
+<ul>
+  <li><strong>Neuen Mitarbeiter hinzufügen</strong> – öffnet das Formular für einen neuen Mitarbeiter</li>
+  <li><strong>Alle Mitarbeiter anzeigen</strong> – zeigt die vollständige Mitarbeiterliste</li>
+</ul>
+
+<p>Darunter werden die <strong>5 zuletzt erstellten Mitarbeiter</strong> in einer Tabelle angezeigt.</p>
+
+<hr class="divider">
+
+<h2 id="mitarbeiter-anlegen">2.3 Neuen Mitarbeiter anlegen</h2>
+
+<div class="step">
+  <p><span class="step-number">1</span> Klicken Sie im Dashboard auf <strong>Neuen Mitarbeiter hinzufügen</strong> oder gehen Sie im linken Menü zu <span class="path">Mitarbeiter → Neu hinzufügen</span>.</p>
+  <p><span class="step-number">2</span> Das Mitarbeiterformular öffnet sich.</p>
+  <p><span class="step-number">3</span> Füllen Sie alle relevanten Felder aus (Pflichtfelder sind mit * gekennzeichnet).</p>
+  <p><span class="step-number">4</span> Klicken Sie oben rechts auf <strong>Veröffentlichen</strong>, um den Mitarbeiter zu speichern.</p>
+</div>
+
+<div class="success">
+  <strong>Ergebnis:</strong> Der Mitarbeiter wird gespeichert. Der Name wird automatisch als Titel des Eintrags gesetzt. Sie können jetzt PDF generieren und versenden.
+</div>
+
+<hr class="divider">
+
+<h2 id="felder-erklaerung">2.4 Alle Felder erklärt</h2>
+
+<h3>Persönliche Daten</h3>
+
+<table>
+  <tr>
+    <th>Feld</th>
+    <th>Erklärung</th>
+    <th>Pflichtfeld?</th>
+  </tr>
+  <tr>
+    <td>Anrede</td>
+    <td>Herr / Frau / Divers</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Vorname *</td>
+    <td>Vorname des Mitarbeiters</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Nachname *</td>
+    <td>Nachname des Mitarbeiters</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Sozialversicherungsnummer</td>
+    <td>10-stellige österreichische SVNr (nur Ziffern)</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Geburtsdatum</td>
+    <td>Geburtsdatum im Format TT.MM.JJJJ</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Staatsangehörigkeit</td>
+    <td>Nationalität des Mitarbeiters</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>E-Mail-Adresse</td>
+    <td>Private E-Mail des Mitarbeiters</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Personenstand</td>
+    <td>Ledig / Verheiratet / Geschieden / Verwitwet</td>
+    <td class="optional">Nein</td>
+  </tr>
+</table>
+
+<h3>Adresse</h3>
+
+<table>
+  <tr>
+    <th>Feld</th>
+    <th>Erklärung</th>
+  </tr>
+  <tr>
+    <td>Straße und Hausnummer</td>
+    <td>Wohnadresse des Mitarbeiters</td>
+  </tr>
+  <tr>
+    <td>PLZ</td>
+    <td>Postleitzahl</td>
+  </tr>
+  <tr>
+    <td>Ort</td>
+    <td>Wohnort</td>
+  </tr>
+</table>
+
+<h3>Beschäftigungsdaten</h3>
+
+<table>
+  <tr>
+    <th>Feld</th>
+    <th>Erklärung</th>
+    <th>Pflichtfeld?</th>
+  </tr>
+  <tr>
+    <td>Eintrittsdatum *</td>
+    <td>Erster Arbeitstag</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Art des Dienstverhältnisses *</td>
+    <td>Angestellter / Arbeiter/in / Lehrling</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Bezeichnung der Tätigkeit</td>
+    <td>Berufsbezeichnung (z. B. „Buchhalter/in")</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Arbeitszeit pro Woche (Stunden)</td>
+    <td>Wöchentliche Stundenanzahl (1–60 Std.)</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Gehalt/Lohn (€)</td>
+    <td>Monatlicher Brutto- oder Nettolohn</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Brutto/Netto</td>
+    <td>Gibt an, ob das eingetragene Gehalt Brutto oder Netto ist</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Beschäftigungsstatus</td>
+    <td>Beschäftigt / Beurlaubt / Suspendiert / Ausgeschieden</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Arbeitstage</td>
+    <td>Wochentage, an denen der Mitarbeiter arbeitet (Mo–So)</td>
+    <td class="optional">Nein</td>
+  </tr>
+</table>
+
+<h3>Anmerkungen</h3>
+
+<p>Freies Textfeld für interne Notizen (erscheint im PDF).</p>
+
+<div class="note">
+  <strong>Hinweis zur Sozialversicherungsnummer:</strong> Das Feld akzeptiert nur Ziffern (0–9), maximal 10 Stellen. Bei ungültiger Eingabe wird das Feld rot markiert.
+</div>
+
+<hr class="divider">
+
+<h2 id="pdf-versenden">2.5 PDF anzeigen &amp; versenden</h2>
+
+<p>Sobald ein Mitarbeiter gespeichert (veröffentlicht) ist, stehen in der rechten Seitenleiste die <strong>PDF Aktionen</strong> zur Verfügung.</p>
+
+<h3>PDF anzeigen</h3>
+
+<div class="step">
+  <p><span class="step-number">1</span> Klicken Sie auf <strong>PDF anzeigen</strong>.</p>
+  <p><span class="step-number">2</span> Das PDF öffnet sich automatisch in einem neuen Browser-Tab mit allen aktuellen Mitarbeiterdaten.</p>
+</div>
+
+<h3>PDF per E-Mail versenden</h3>
+
+<div class="step">
+  <p><span class="step-number">1</span> Tragen Sie eine E-Mail-Adresse in das Feld <em>E-Mail-Adresse eingeben</em> ein.</p>
+  <p><span class="step-number">2</span> Aktivieren Sie die Checkbox <strong>An oben eingegebene E-Mail senden</strong>.</p>
+  <p><span class="step-number">3</span> Falls konfiguriert: Aktivieren Sie <strong>An Buchhaltung senden</strong>, um das PDF direkt an die Buchhaltung weiterzuleiten.</p>
+  <p><span class="step-number">4</span> Klicken Sie auf <strong>PDF versenden</strong>.</p>
+</div>
+
+<div class="success">
+  <strong>Ergebnis:</strong> Nach erfolgreichem Versand erscheint ein Bestätigungs-Popup. Die Sendedaten (Datum, Empfänger) werden im Status-Bereich angezeigt.
+</div>
+
+<div class="warning">
+  <strong>Fehler „Bitte wählen Sie mindestens einen Empfänger aus":</strong> Es muss mindestens eine Checkbox aktiviert sein, bevor Sie auf „PDF versenden" klicken.
+</div>
+
+<hr class="divider">
+
+<h2 id="kuendigung">2.6 Kündigung erstellen</h2>
+
+<p>Wenn ein Mitarbeiter das Unternehmen verlässt, kann direkt aus der Mitarbeiterseite heraus eine Kündigung erstellt werden. Dies erzeugt automatisch ein Kündigungs-PDF und ändert den Mitarbeiterstatus auf „Ausgeschieden".</p>
+
+<h3>Kündigung ausfüllen</h3>
+
+<div class="step">
+  <p><span class="step-number">1</span> Öffnen Sie den betreffenden Mitarbeiter zur Bearbeitung.</p>
+  <p><span class="step-number">2</span> In der rechten Seitenleiste finden Sie die Box <strong>Kündigung</strong>.</p>
+  <p><span class="step-number">3</span> Klicken Sie auf <strong>Kündigung erstellen</strong>, um das Formular aufzuklappen.</p>
+  <p><span class="step-number">4</span> Füllen Sie folgende Felder aus:</p>
+</div>
+
+<table>
+  <tr>
+    <th>Feld</th>
+    <th>Erklärung</th>
+    <th>Pflichtfeld?</th>
+  </tr>
+  <tr>
+    <td>Kündigungsart *</td>
+    <td>Ordentliche Kündigung (mit Frist) oder Fristlose Kündigung</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Kündigungsdatum *</td>
+    <td>Das Datum, an dem die Kündigung ausgesprochen wird</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Beendigungsdatum *</td>
+    <td>Letzter Arbeitstag (muss nach dem Kündigungsdatum liegen)</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Grund der Kündigung *</td>
+    <td>Textliche Begründung der Kündigung</td>
+    <td class="required">Ja</td>
+  </tr>
+  <tr>
+    <td>Kündigungsfrist</td>
+    <td>z. B. „1 Monat zum Monatsende"</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Resturlaub (Tage)</td>
+    <td>Noch offene Urlaubstage bei Austritt</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Überstunden (Stunden)</td>
+    <td>Noch nicht abgegoltene Überstunden</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Zeugnis gewünscht</td>
+    <td>Checkbox: Mitarbeiter wünscht ein Arbeitszeugnis</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>Übergabe erledigt</td>
+    <td>Checkbox: Übergabe der Aufgaben abgeschlossen</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>E-Mail für PDF</td>
+    <td>Optional: Nach dem Speichern wird das Kündigungs-PDF automatisch an diese Adresse versendet</td>
+    <td class="optional">Nein</td>
+  </tr>
+  <tr>
+    <td>An Buchhaltung senden</td>
+    <td>Checkbox: Gleichzeitig an die Buchhaltungs-E-Mail senden</td>
+    <td class="optional">Nein</td>
+  </tr>
+</table>
+
+<div class="step">
+  <p><span class="step-number">5</span> Klicken Sie oben rechts auf <strong>Aktualisieren</strong>, um die Kündigung zu speichern und zu erstellen.</p>
+</div>
+
+<div class="success">
+  <strong>Ergebnis:</strong>
+  <ul>
+    <li>Grüne Erfolgsmeldung erscheint: „Kündigung erfolgreich erstellt!"</li>
+    <li>Der Status des Mitarbeiters ändert sich automatisch auf <strong>Ausgeschieden</strong></li>
+    <li>In der Kündigung-Box erscheint die erstellte Kündigung mit Versandmöglichkeit</li>
+    <li>Falls eine E-Mail angegeben wurde, wird das PDF sofort versendet</li>
+  </ul>
+</div>
+
+<h3>Kündigungs-PDF nachträglich versenden</h3>
+
+<div class="step">
+  <p><span class="step-number">1</span> Öffnen Sie den Mitarbeiter (Status: Ausgeschieden).</p>
+  <p><span class="step-number">2</span> In der rechten Box <strong>Kündigung</strong> sehen Sie die bestehende Kündigung.</p>
+  <p><span class="step-number">3</span> Tragen Sie eine E-Mail-Adresse ein und aktivieren Sie die gewünschten Empfänger-Checkboxen.</p>
+  <p><span class="step-number">4</span> Klicken Sie auf <strong>PDF versenden</strong>.</p>
+</div>
+
+<hr class="divider">
+
+<!-- =========================================== -->
+<!--  TEIL 3 – FEHLERBEHEBUNG                    -->
+<!-- =========================================== -->
+
+<h1 id="teil3">Teil 3: Häufige Fragen &amp; Fehlersuche</h1>
+
+<table>
+  <tr>
+    <th>Problem</th>
+    <th>Mögliche Ursache</th>
+    <th>Lösung</th>
+  </tr>
+  <tr>
+    <td>Willkommens-E-Mail wurde nicht empfangen</td>
+    <td>Spam-Filter oder falsche E-Mail-Adresse</td>
+    <td>Spam-Ordner prüfen. Im WordPress-Admin unter Benutzer die E-Mail-Adresse überprüfen. E-Mail-Versand in den WordPress-Einstellungen testen.</td>
+  </tr>
+  <tr>
+    <td>PDF erscheint leer oder Daten fehlen</td>
+    <td>Mitarbeiter wurde nicht korrekt gespeichert</td>
+    <td>Mitarbeiter öffnen, sicherstellen dass Pflichtfelder gefüllt sind, erneut auf „Aktualisieren" klicken und PDF neu generieren.</td>
+  </tr>
+  <tr>
+    <td>E-Mail-Versand schlägt fehl</td>
+    <td>Buchhaltungs-E-Mail nicht konfiguriert, WordPress-Mailversand nicht eingerichtet</td>
+    <td>Einstellungen prüfen. Sicherstellen, dass die Buchhaltungs-E-Mail eingetragen ist. WordPress muss grundsätzlich E-Mails versenden können.</td>
+  </tr>
+  <tr>
+    <td>Kündigung kann nicht erstellt werden</td>
+    <td>Mitarbeiter hat keinen Arbeitgeber zugeordnet</td>
+    <td>Sicherstellen, dass im Feld „Arbeitgeber" ein Kunde ausgewählt ist. Als Kunden-User wird der Arbeitgeber automatisch zugeordnet.</td>
+  </tr>
+  <tr>
+    <td>Beendigungsdatum liegt vor Kündigungsdatum</td>
+    <td>Falsche Datumseingabe</td>
+    <td>Das Beendigungsdatum (letzter Arbeitstag) muss immer nach oder gleich dem Kündigungsdatum sein.</td>
+  </tr>
+  <tr>
+    <td>Kunden-Login schlägt fehl</td>
+    <td>Passwort noch nicht gesetzt</td>
+    <td>Passwort-Reset-Link erneut zusenden: WordPress-Admin → Benutzer → Benutzer auswählen → Passwort-Reset senden.</td>
+  </tr>
+  <tr>
+    <td>SVNr wird nicht gespeichert</td>
+    <td>Weniger oder mehr als 10 Ziffern eingegeben</td>
+    <td>Die Sozialversicherungsnummer muss genau 10 Ziffern haben. Buchstaben und Sonderzeichen werden ignoriert.</td>
+  </tr>
+  <tr>
+    <td>Mitarbeiter eines anderen Kunden sind sichtbar</td>
+    <td>Benutzer hat die falsche Rolle</td>
+    <td>Im Admin unter Benutzer prüfen, ob der Benutzer die Rolle „Kunden" (kunden_v2) hat und nicht Administrator ist.</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<p style="color:#888; font-size:9pt; text-align:center;">RT Employee Manager V2 &nbsp;|&nbsp; Entwickelt von Edris Husein &nbsp;|&nbsp; edrishusein.com</p>
+
+</body>
+</html>
