@@ -98,22 +98,6 @@ Settings are stored in `wp_options`:
 
 ---
 
-## Development
-
-```bash
-# Local URL
-http://rt-buchhaltung.local
-
-# WordPress admin
-http://rt-buchhaltung.local/wp-admin/
-
-# Plugin settings
-http://rt-buchhaltung.local/wp-admin/admin.php?page=staff-manager-settings
-
-```
-
----
-
 
 ## Author
 
