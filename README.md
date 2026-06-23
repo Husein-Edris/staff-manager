@@ -1,5 +1,7 @@
 # Staff Manager
 
+![Staff Manager](assets/cover.png)
+
 A WordPress plugin for accounting firms to manage client companies, their employees, and terminations — with built-in PDF generation and email delivery.
 
 ---
